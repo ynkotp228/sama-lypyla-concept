@@ -1,0 +1,33 @@
+---
+import { Image } from "astro:assets";
+import BurgerButton from "./Menu/BurgerButton.astro";
+import BurgerPanel from "./Menu/BurgerPanel.astro";
+import DesktopNav from "./Menu/Desktop.Nav.astro";
+import logo from '../assets/images/logo.png';
+
+const base = import.meta.env.BASE_URL;
+
+---
+<header> 
+    <div>
+        <a href={`${base}`}>
+            <Image 
+                src={logo}
+                alt=""
+                width={88}
+                height={88}
+            />
+            <span>
+
+            </span>
+        </a>
+        <div>
+
+        </div>
+        <DesktopNav />
+        <BurgerButton />
+         
+    </div>
+</header>
+<BurgerPanel />
+ 

@@ -1,0 +1,32 @@
+ ---
+// ШАБЛОН: кнопка-гамбургер.
+// Відкриває елемент із id="sidebar" (керується menu.js).
+// Місця для заміни позначені #@  — дивись файл "Розгорнути проєкт.md"
+---
+
+<button
+	type="button"
+	id="menu-toggle"
+	aria-label="#@ Відкрити меню"
+	aria-expanded="false"
+	aria-controls="sidebar"
+	class="inline-flex h-11 w-11 items-center justify-center rounded-full transition hover:bg-black/10 lg:hidden"
+>
+	<span class="sr-only">#@ Меню</span>
+	<svg
+		xmlns="http://www.w3.org/2000/svg"
+		width="26"
+		height="26"
+		viewBox="0 0 24 24"
+		fill="none"
+		stroke="currentColor"
+		stroke-width="2"
+		stroke-linecap="round"
+		stroke-linejoin="round"
+		aria-hidden="true"
+	>
+		<line x1="3" y1="6" x2="21" y2="6"></line>
+		<line x1="3" y1="12" x2="21" y2="12"></line>
+		<line x1="3" y1="18" x2="21" y2="18"></line>
+	</svg>
+</button>

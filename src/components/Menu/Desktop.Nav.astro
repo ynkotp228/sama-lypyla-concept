@@ -1,0 +1,8 @@
+---
+import { links } from '../../data/nav.ts';
+---
+<nav class="hidden items-center gap-6 text-sm lg:flex">
+	{links.map(link => (
+		<a href={link.href} class="transition hover:opacity-70">{link.name}</a>
+	))}
+</nav>

@@ -1,0 +1,17 @@
+@import "tailwindcss";
+@custom-variant is-open (&.is-open, .is-open &); 
+
+
+@theme {
+
+}
+
+
+@layer base {
+
+}
+
+
+@layer components {
+
+}
