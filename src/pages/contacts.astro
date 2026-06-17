@@ -1,7 +1,24 @@
 ---
-import ComingSoon from "../layouts/ComingSoon.astro";
-import Form from "../components/Form.astro";
+import Layout from "../layouts/Layout.astro";
+import PageHeader from "../components/PageHeader.astro";
+import Form from "../components/ContactsComponents/Form.astro";
+import ContactsBlock from "../components/ContactsComponents/ContactsBlock.astro";
+import SocialMedia from "../components/ContactsComponents/SocialMedia.astro";
 ---
-<ComingSoon title="Контакти">
-	<Form />
-</ComingSoon>
+<Layout title="Контакти — Сама Ліпила">
+  <PageHeader
+    title="Контакти"
+    description="Питання, відгуки, пропозиції — пиши, дзвони, чекаємо на тебе."
+  />
+  <div class="container mx-auto max-w-5xl px-4 py-16">
+    <div class="grid gap-8 lg:grid-cols-2 lg:items-start">
+      <!-- Ліва колонка: прямі контакти + соцмережі -->
+      <div class="space-y-8">
+        <ContactsBlock />
+        <SocialMedia />
+      </div>
+      <!-- Права колонка: форма зв'язку -->
+      <Form />
+    </div>
+  </div>
+</Layout>

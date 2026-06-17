@@ -1,0 +1,69 @@
+---
+// Соцмережі бренду. Лінки — ті самі, що у футері (Instagram — головний канал, Facebook — Вінниця).
+const socials = [
+  {
+    name: "Instagram",
+    handle: "@samalipyla",
+    note: "головний канал",
+    href: "https://www.instagram.com/samalipyla/",
+    icon: "instagram",
+  },
+  {
+    name: "Facebook",
+    handle: "Сама Ліпила Вінниця",
+    note: "Вінниця",
+    href: "https://www.facebook.com/SamaLipylaVinnytsia/reels/",
+    icon: "facebook",
+  },
+] as const;
+---
+
+<section
+  aria-labelledby="socials-heading"
+  class="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-warm/10 md:p-8"
+>
+  <h2 id="socials-heading" class="font-display text-2xl font-semibold text-warm">
+    Ми у соцмережах
+  </h2>
+  <p class="mt-2 text-warm/70">
+    Найсвіжіші новинки, рецепти та закулісся — у нашій стрічці.
+  </p>
+
+  <ul class="mt-5 space-y-3">
+    {socials.map((s) => (
+      <li>
+        <a
+          href={s.href}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="group flex items-center gap-4 rounded-xl border border-warm/10 p-4 transition hover:border-primary hover:bg-cream"
+        >
+          <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary transition group-hover:bg-primary group-hover:text-white">
+            {s.icon === "instagram" && (
+              <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <rect x="2" y="2" width="20" height="20" rx="5"></rect>
+                <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+                <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+              </svg>
+            )}
+            {s.icon === "facebook" && (
+              <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
+              </svg>
+            )}
+          </span>
+
+          <span class="min-w-0 flex-1">
+            <span class="flex items-center gap-2">
+              <span class="font-medium text-warm">{s.name}</span>
+              <span class="text-xs text-warm/50">— {s.note}</span>
+            </span>
+            <span class="block text-sm text-warm/60">{s.handle}</span>
+          </span>
+
+          <span class="text-xl text-primary transition group-hover:translate-x-1" aria-hidden="true">→</span>
+        </a>
+      </li>
+    ))}
+  </ul>
+</section>

@@ -1,4 +1,100 @@
 ---
-import ComingSoon from "../layouts/ComingSoon.astro";
+import Layout from '../layouts/Layout.astro';
+import PageHeader from '../components/PageHeader.astro';
+
+// Точки продажу. Посилання на Google Maps будуємо програмно —
+// стандартний пошуковий формат ?api=1&query=<адреса>, щоб не хардкодити кожне.
+interface Point {
+  address: string; // як показуємо на картці
+  note?: string;   // орієнтир (ЖК, ТОЦ, район тощо)
+}
+
+const lvivPoints: Point[] = [
+  { address: 'вул. Вигоди, 29', note: 'Левандівка' },
+  { address: 'вул. Порохова, 20А' },
+  { address: 'вул. Городоцька, 86' },
+  { address: 'вул. Малоголосківська, 16' },
+  { address: 'вул. Тичини, 18' },
+];
+
+const vinnytsiaPoints: Point[] = [
+  { address: 'просп. Юності, 21' },
+  { address: 'просп. Юності, 44' },
+  { address: 'вул. Пирогова, 105' },
+  { address: 'вул. Порика, 14' },
+  { address: 'вул. Ак. Янгеля, 12' },
+  { address: 'вул. Князів Коріатовичів, 172' },
+  { address: 'вул. Архітектора Артинова, 6' },
+  { address: 'вул. Ватутіна, 18а' },
+  { address: 'вул. Костя Широцького, 8' },
+  { address: 'вул. Немирівське шосе, 76' },
+  { address: 'вул. Трамвайна, 3', note: 'ЖК Авалон' },
+  { address: 'вул. Келецька, 126а' },
+  { address: 'просп. Коцюбинського, 28' },
+  { address: 'Зупинка Привокзальна', note: 'у бік району Бучмі' },
+  { address: 'вул. Хмельницьке шосе, 114В', note: 'ТОЦ The Mall' },
+  { address: 'вул. Винниченка, 2' },
+  { address: 'вул. Олега Антонова, 40а' },
+  { address: 'вул. Зодчих, 13' },
+];
+
+// Посилання на Google Maps для конкретної точки (місто + адреса).
+const mapLink = (city: string, address: string) =>
+  `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`Сама Ліпила, ${city}, ${address}`)}`;
+
+const cities = [
+  { id: 'lviv', name: 'Львів', points: lvivPoints },
+  { id: 'vinnytsia', name: 'Вінниця', points: vinnytsiaPoints },
+];
 ---
-<ComingSoon title="Локації" />
+
+<Layout title="Локації — Сама Ліпила">
+  <PageHeader
+    title="Локації"
+    description="5 точок у Львові, 18 — у Вінниці. Обери найближчу та відкрий маршрут у Google Maps."
+  />
+
+  <main class="container mx-auto max-w-5xl px-4 py-16 md:py-24">
+    {cities.map((city) => (
+      <!-- ВАЖЛИВО: id — це якір з тизера локацій на головній (LocationsTeaser) -->
+      <section id={city.id} aria-labelledby={`${city.id}-heading`} class="mb-16 scroll-mt-24 last:mb-0">
+        <header class="mb-8 flex items-baseline gap-3">
+          <h2 id={`${city.id}-heading`} class="font-display text-3xl font-semibold text-warm md:text-4xl">
+            {city.name}
+          </h2>
+          <span class="text-lg text-warm/50">
+            {city.points.length} {city.points.length === 1 ? 'точка' : 'точок'}
+          </span>
+        </header>
+
+        <ul class="grid grid-cols-1 gap-4 sm:grid-cols-2 md:gap-6 lg:grid-cols-3">
+          {city.points.map((point) => (
+            <li>
+              <a
+                href={mapLink(city.name, point.address)}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="group flex h-full flex-col justify-between gap-4 rounded-2xl border border-warm/10 bg-white p-6 transition hover:border-primary hover:shadow-lg"
+              >
+                <div>
+                  <address class="not-italic">
+                    <span class="block font-display text-lg font-semibold leading-snug text-warm">
+                      {point.address}
+                    </span>
+                    {point.note && (
+                      <span class="mt-1 block text-sm text-warm/60">{point.note}</span>
+                    )}
+                  </address>
+                </div>
+                <span class="inline-flex items-center gap-1.5 text-sm font-medium text-primary transition group-hover:text-accent-red">
+                  Відкрити в Картах
+                  <span class="transition group-hover:translate-x-1" aria-hidden="true">→</span>
+                </span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </section>
+    ))}
+  </main>
+</Layout>

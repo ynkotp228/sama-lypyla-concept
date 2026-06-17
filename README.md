@@ -1,14 +1,30 @@
- npm create astro@latest -- --template basics
-  
-All commands are run from the root of the project, from a terminal:
+# Сама Ліпила — Concept Redesign
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
-**Важливо** 
-Цей сайт лише концепт-редизайн існуючого бренду. Він не має ніяких зв'язків із офіційною студією "Сама Ліпила". 
+> **Це концепт-редизайн існуючого бренду «Сама Ліпила» для портфоліо.**
+> Не пов'язаний з офіційною студією. Усі тексти оригінальні, фото — Pexels/Unsplash,
+> дані товарів (ціни, ваги, асортимент) — вигадані.
+
+## Про проєкт
+
+Навчальний проєкт у рамках самостійного 16-тижневого плану навчання веб-розробці.
+Тема — заморожені напівфабрикати ручної ліпки.
+
+## Стек
+
+- Astro 5
+- Tailwind CSS v4
+- TypeScript
+- @fontsource (Lora + Inter)
+- Formspree
+- GitHub Pages
+
+## Live demo
+
+https://ynkotp228.github.io/sama-lipyla-concept/
+
+## Локальний запуск
+
+\`\`\`bash
+npm install
+npm run dev
+\`\`\`
