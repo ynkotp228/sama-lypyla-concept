@@ -9,6 +9,6 @@ export default defineConfig({
     plugins: [tailwindcss()],
   },
   site: "https://ynkotp228.github.io",
-  base: "/sama-lipyla-concept/",
+  base: "/sama-lypyla-concept/",
   integrations: [sitemap()],
 });
