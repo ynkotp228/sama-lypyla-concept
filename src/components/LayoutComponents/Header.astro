@@ -81,4 +81,7 @@ const cartHref = `${base}cart/`;
 
   // 2. Оновлювати при кожній зміні кошика
   window.addEventListener('cart-updated', updateCounter);
+  window.addEventListener('storage', (e) => {
+  if (e.key === 'sama-lipyla-cart') updateCounter();
+});
 </script>
