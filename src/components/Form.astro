@@ -1,10 +1,10 @@
 ---
 ---
 
-<section>
-	<div>
-		<h2>Маєте запитання?</h2>
-		<p>
+<section class="w-full max-w-lg text-left">
+	<div class="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-warm/10 md:p-8">
+		<h2 class="font-display text-2xl font-semibold text-warm">Маєте запитання?</h2>
+		<p class="mt-2 text-warm/70">
 			Залиште свої контакти — і ми зв'яжемося з вами найближчим часом.
 		</p>
 
@@ -12,51 +12,64 @@
 			id="ask-form"
 			action="https://formspree.io/f/mojzpzne"
 			method="POST"
+			class="mt-6 space-y-4"
 		>
 			<div>
-				<div>
-					<label for="name">Ваше ім'я</label>
-					<input
-						type="text"
-						id="name"
-						name="name"
-						minlength="2"
-						required
-						placeholder="Мінімум 2 символи"
-					/>
-					<p class="field-error" data-error-for="name" hidden></p>
-				</div>
-
-				<div>
-					<label for="tel">Ваш телефон</label>
-					<input
-						type="tel"
-						id="tel"
-						name="tel"
-						pattern="\+380\d{9}"
-						required
-						placeholder="+380XXXXXXXXX"
-					/>
-					<p class="field-error" data-error-for="tel" hidden></p>
-				</div>
-
-				<div>
-					<label for="message">Ваше запитання</label>
-					<textarea
-						id="message"
-						name="message"
-						rows="4"
-						minlength="10"
-						required
-						placeholder="Розкажіть, що вас цікавить (мінімум 10 символів)"
-					></textarea>
-					<p class="field-error" data-error-for="message" hidden></p>
-				</div>
-
-				<button type="submit">Надіслати</button>
-
-				<p id="form-status" role="status" aria-live="polite" hidden></p>
+				<label for="name" class="mb-1 block text-sm font-medium text-warm">Ваше ім'я</label>
+				<input
+					type="text"
+					id="name"
+					name="name"
+					minlength="2"
+					required
+					placeholder="Мінімум 2 символи"
+					class="w-full rounded-lg border border-warm/20 bg-white px-3 py-2.5 text-warm placeholder:text-warm/40 transition focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30 aria-[invalid]:border-accent-red"
+				/>
+				<p class="field-error mt-1 text-sm text-accent-red" data-error-for="name" hidden></p>
 			</div>
+
+			<div>
+				<label for="tel" class="mb-1 block text-sm font-medium text-warm">Ваш телефон</label>
+				<input
+					type="tel"
+					id="tel"
+					name="tel"
+					pattern="\+380\d{9}"
+					required
+					placeholder="+380XXXXXXXXX"
+					class="w-full rounded-lg border border-warm/20 bg-white px-3 py-2.5 text-warm placeholder:text-warm/40 transition focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30 aria-[invalid]:border-accent-red"
+				/>
+				<p class="field-error mt-1 text-sm text-accent-red" data-error-for="tel" hidden></p>
+			</div>
+
+			<div>
+				<label for="message" class="mb-1 block text-sm font-medium text-warm">Ваше запитання</label>
+				<textarea
+					id="message"
+					name="message"
+					rows="4"
+					minlength="10"
+					required
+					placeholder="Розкажіть, що вас цікавить (мінімум 10 символів)"
+					class="w-full rounded-lg border border-warm/20 bg-white px-3 py-2.5 text-warm placeholder:text-warm/40 transition focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30 aria-[invalid]:border-accent-red"
+				></textarea>
+				<p class="field-error mt-1 text-sm text-accent-red" data-error-for="message" hidden></p>
+			</div>
+
+			<button
+				type="submit"
+				class="w-full rounded-lg bg-primary px-4 py-3 font-medium text-white transition hover:bg-accent-red"
+			>
+				Надіслати
+			</button>
+
+			<p
+				id="form-status"
+				role="status"
+				aria-live="polite"
+				class="text-sm font-medium data-[state=error]:text-accent-red data-[state=ok]:text-green-700"
+				hidden
+			></p>
 		</form>
 	</div>
 </section>

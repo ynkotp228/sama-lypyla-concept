@@ -1,8 +1,13 @@
 ---
 import { links } from '../../data/nav.ts';
 ---
-<nav class="hidden items-center gap-6 text-sm lg:flex">
+<nav class="hidden items-center gap-7 text-sm font-medium lg:flex" aria-label="Головна навігація">
 	{links.map(link => (
-		<a href={link.href} class="transition hover:opacity-70">{link.name}</a>
+		<a
+			href={link.href}
+			class="text-warm/80 transition-colors hover:text-primary"
+		>
+			{link.name}
+		</a>
 	))}
 </nav>

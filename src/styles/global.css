@@ -1,17 +1,48 @@
 @import "tailwindcss";
-@custom-variant is-open (&.is-open, .is-open &); 
+@custom-variant is-open (&.is-open, .is-open &);
 
-
+/* ─── Дизайн-токени бренду (з брифу) ───────────────────────────────
+   Палітра та шрифти живуть тут (Tailwind v4, без tailwind.config.js).
+   Кольори → утиліти: bg-primary, text-warm, border-cream, bg-deep-blue ... */
 @theme {
+  --color-primary: #e97817; /* основний теплий помаранчевий бренду */
+  --color-accent-red: #c24a1f; /* CTA / акценти / апетит (та hover для primary) */
+  --color-deep-blue: #2b5f8c; /* вторинний з лого — довіра */
+  --color-cream: #fbf6ee; /* фон — асоціація з папером меню */
+  --color-warm: #2a1810; /* основний текст — теплий коричневий */
 
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Lora", ui-serif, Georgia, "Times New Roman", serif;
 }
-
 
 @layer base {
+  html {
+    scroll-behavior: smooth;
+  }
 
+  body {
+    background-color: var(--color-cream);
+    color: var(--color-warm);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  /* Заголовки — serif Lora (домашнє позиціонування з брифу). */
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-display);
+    text-wrap: balance;
+  }
+
+  /* Видимий фокус для клавіатурної навігації (a11y). */
+  :focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+  }
 }
 
-
 @layer components {
-
 }

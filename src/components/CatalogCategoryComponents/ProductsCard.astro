@@ -1,7 +1,7 @@
 ---
 // src/components/CatalogCategoryComponents/ProductsCard.astro
 import { Picture } from 'astro:assets';
-import type { Product } from '../../data/products.ts';
+import { tagLabels, type Product } from '../../data/products.ts';
 
 interface Props {
   product: Product;
@@ -10,27 +10,66 @@ interface Props {
 const { product } = Astro.props;
 // data-tags — кирпич №1 фільтра: теги одним рядком через пробіл.
 const tags = (product.tags ?? []).join(' ');
+
+// Бейджі: максимум 2. Пріоритет — Хіт → Новинка → найхарактерніший тег.
+type Badge = { label: string; kind: 'hit' | 'new' | 'tag' };
+const allBadges: Badge[] = [];
+if (product.isHit) allBadges.push({ label: 'Хіт', kind: 'hit' });
+if (product.isNew) allBadges.push({ label: 'Новинка', kind: 'new' });
+const firstTag = product.tags?.[0];
+if (firstTag) allBadges.push({ label: tagLabels[firstTag], kind: 'tag' });
+const badges = allBadges.slice(0, 2);
+
+const badgeClass: Record<Badge['kind'], string> = {
+  hit: 'bg-accent-red text-white',
+  new: 'bg-deep-blue text-white',
+  tag: 'bg-cream text-warm ring-1 ring-warm/15',
+};
 ---
 
 <article
-  class="product-card group flex flex-col overflow-hidden rounded-lg border border-gray-200 bg-white"
+  class="product-card group flex flex-col overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-warm/10 transition duration-300 hover:shadow-lg"
   data-tags={tags}
 >
-  <Picture
-    src={product.image}
-    widths={[280, 350, 600]}
-    sizes="(min-width: 1024px) 280px, (min-width: 640px) 350px, 100vw"
-    formats={['avif', 'webp']}
-    alt={product.alt}
-    class="[&_img]:aspect-4/3 [&_img]:w-full [&_img]:object-cover [&_img]:transition-transform [&_img]:duration-300 group-hover:[&_img]:scale-105"
-  />
-  <div class="flex flex-1 flex-col gap-1 p-4">
-    <h3 class="font-medium">{product.name}</h3>
-    <p class="text-sm text-gray-600">{product.weight} · {product.price} ₴</p>
+  <div class="relative overflow-hidden">
+    <Picture
+      src={product.image}
+      widths={[280, 350, 600]}
+      sizes="(min-width: 1024px) 280px, (min-width: 640px) 45vw, 100vw"
+      formats={['avif', 'webp']}
+      alt={product.alt}
+      class="[&_img]:aspect-4/3 [&_img]:w-full [&_img]:object-cover [&_img]:transition-transform [&_img]:duration-500 group-hover:[&_img]:scale-105"
+    />
+    {badges.length > 0 && (
+      <div class="absolute left-3 top-3 flex flex-wrap gap-1.5">
+        {badges.map((b) => (
+          <span class:list={["rounded-full px-2.5 py-1 text-xs font-semibold shadow-sm", badgeClass[b.kind]]}>
+            {b.label}
+          </span>
+        ))}
+      </div>
+    )}
+  </div>
+
+  <div class="flex flex-1 flex-col gap-2 p-4">
+    <h3 class="font-medium text-warm">{product.name}</h3>
+    <p class="text-sm text-warm/60">
+      {product.weight} · <span class="font-semibold text-warm">{product.price} ₴</span>
+    </p>
+
+    {product.description && (
+      <details class="text-sm text-warm/70">
+        <summary class="cursor-pointer list-none font-medium text-primary transition hover:text-accent-red [&::-webkit-details-marker]:hidden">
+          Детальніше
+        </summary>
+        <p class="mt-2 leading-relaxed">{product.description}</p>
+      </details>
+    )}
+
     <button
       type="button"
       data-product-id={product.id}
-      class="mt-auto rounded-md bg-orange-500 px-3 py-2 text-sm font-medium text-white transition-colors hover:bg-orange-600"
+      class="mt-auto rounded-lg bg-primary px-3 py-2.5 text-sm font-medium text-white transition-colors hover:bg-accent-red"
     >
       + в кошик
     </button>

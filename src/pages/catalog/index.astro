@@ -1,14 +1,19 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import Categories from '../../components/MainPageComponents/Categories.astro';
+import Popular from '../../components/MainPageComponents/Popular.astro';
+import PageHeader from '../../components/PageHeader.astro';
 ---
 <Layout
   title="Меню — Сама Ліпила"
   description="Усі категорії домашніх напівфабрикатів ручної ліпки: вареники, пельмені, сирники, млинці, піца, м'ясопродукти та випічка з м'ясом."
 >
-  <main>
-    <!-- Хедер і футер приходять із Layout.astro.
-         Сітку категорій переиспользуємо з головної (Categories → CategoriesItems). -->
-    <Categories />
+  <main class="flex-1">
+    <PageHeader
+      title="Меню"
+      description="Заморожені напівфабрикати ручної ліпки. 8 категорій, понад 50 позицій."
+    />
+    <Categories showHeader={false} />
+    <Popular />
   </main>
 </Layout>

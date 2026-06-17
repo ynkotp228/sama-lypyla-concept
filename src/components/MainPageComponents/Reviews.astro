@@ -28,74 +28,44 @@ const testimonials: Testimonial[] = [
 ];
 ---
 
-<!-- 
-  [ BG секції: кремовий — той самий, що загальний фон, або трохи світліший за нього.
-    Картки матимуть білий фон, тому секція має бути ТЕМНІШОЮ за картки. ]
--->
 <section class="py-16 md:py-24">
   <div class="mx-auto max-w-6xl px-4">
-    
+
     <header class="mb-12 text-center md:mb-16">
-      <h2 class="text-3xl md:text-5xl">
-        <!-- [ TEXT: тёмно-коричневий warm | FONT: display/serif (Lora) ] -->
+      <h2 class="font-display text-3xl font-semibold text-warm md:text-5xl">
         Що пишуть наші покупці
       </h2>
-      <p class="mt-3 text-base md:text-lg">
-        <!-- [ TEXT: тёмно-коричневий warm з прозорістю ~70% ] -->
+      <p class="mt-3 text-base text-warm/70 md:text-lg">
         Без редагування. Як написали — так і залишили.
       </p>
     </header>
 
     <ul class="grid grid-cols-1 gap-6 md:grid-cols-3 md:gap-8">
       {testimonials.map((t) => (
-        <li class="flex flex-col gap-4 rounded-lg p-6 md:p-8">
-          <!-- 
-            [ BG картки: білий або дуже світло-кремовий (світліший за фон секції)
-              + легка shadow АБО тонка межа border (border-warm/10) ]
-          -->
-          
-          <!-- ── Header: аватар + ім'я/місто ── -->
+        <li class="flex flex-col gap-4 rounded-2xl bg-white p-6 shadow-sm ring-1 ring-warm/10 md:p-8">
+
           <header class="flex items-center gap-3">
             <span
-              class="flex h-12 w-12 items-center justify-center rounded-full text-lg font-medium"
+              class="flex h-12 w-12 items-center justify-center rounded-full bg-primary text-lg font-medium text-white"
               aria-hidden="true"
             >
-              <!-- 
-                [ BG кружка: основний оранжевий бренда
-                  TEXT літера: білий або кремовий (контраст з оранжевим) ]
-              -->
               {t.initial}
             </span>
             <div>
-              <p class="font-medium">
-                <!-- [ TEXT: тёмно-коричневий warm ] -->
-                {t.name}
-              </p>
-              <p class="text-sm opacity-70">
-                <!-- [ TEXT: тёмно-коричневий warm зі зниженою прозорістю ] -->
-                {t.city}
-              </p>
+              <p class="font-medium text-warm">{t.name}</p>
+              <p class="text-sm text-warm/60">{t.city}</p>
             </div>
           </header>
 
-          <!-- ── Зірки ── -->
-          <div class="flex gap-0.5" aria-label="Оцінка 5 з 5">
+          <div class="flex gap-0.5 text-primary" aria-label="Оцінка 5 з 5">
             {[1, 2, 3, 4, 5].map(() => (
-              <svg
-                class="h-4 w-4"
-                viewBox="0 0 20 20"
-                fill="currentColor"
-                aria-hidden="true"
-              >
-                <!-- [ FILL зірок: основний оранжевий АБО акцентний червоний ] -->
+              <svg class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                 <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.462a1 1 0 00.95-.69l1.07-3.292z" />
               </svg>
             ))}
           </div>
 
-          <!-- ── Текст відгуку ── -->
-          <p class="text-base leading-relaxed">
-            <!-- [ TEXT: тёмно-коричневий warm з невеликою прозорістю (85-90%) для читабельності блока ] -->
+          <p class="text-base leading-relaxed text-warm/80">
             {t.text}
           </p>
         </li>

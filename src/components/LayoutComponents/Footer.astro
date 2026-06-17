@@ -5,72 +5,56 @@ const base = import.meta.env.BASE_URL;
 const currentYear = new Date().getFullYear();
 ---
 
-<!-- TODO Фон футера: контрастний до основного фону сторінки —
-     темно-коричневий або темно-синій бренду. Текст футера тоді — світлий
-     (кремовий або білий). Альтернатива: світлий фон (той же кремовий) +
-     темний текст — м'якший варіант. -->
-<footer class="py-16 mt-20" id="footer">
-  <div class="container mx-auto px-4 max-w-6xl">
+<footer class="mt-20 bg-warm text-cream" id="footer">
+  <div class="container mx-auto max-w-6xl px-4 py-16">
 
     <!-- ===== Верхня частина: 4 колонки ===== -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 mb-12">
+    <div class="mb-12 grid grid-cols-1 gap-10 md:grid-cols-2 lg:grid-cols-4">
 
       <!-- Колонка 1: Бренд -->
       <div>
-        <!-- TODO Логотип: <img> або inline SVG. Розмір ~ як у Header або трохи більший.
-             Не hero-розміру — це ідентифікатор, не акцент. -->
-        <a href={base} class="inline-block mb-4" aria-label="Сама Ліпила — на головну">
-        	<Image src={logo} width={52} height={64} alt="Сама Ліпила" class="h-16 w-16" /> 
+        <a href={base} class="mb-4 inline-flex items-center gap-2.5" aria-label="Сама Ліпила — на головну">
+          <Image src={logo} width={64} height={64} alt="" class="h-12 w-12 object-contain" />
+          <span class="font-display text-lg font-semibold">Сама Ліпила</span>
         </a>
 
-        <!-- TODO Слоган: шрифт display/serif (Lora), розмір text-lg.
-             Колір: основний колір тексту футера. -->
-        <p class="text-lg mb-3">
+        <p class="mb-3 font-display text-lg text-cream">
           Напівфабрикат може бути якісним
         </p>
 
-        <!-- TODO Опис: той самий колір, opacity /70 — підпорядкований слогану. -->
-        <p class="text-sm">
+        <p class="text-sm text-cream/70">
           Заморожені напівфабрикати ручної роботи
           у Львові та Вінниці.
         </p>
       </div>
 
-      <!-- Колонка 2: Для бізнесу + Контакти -->
-      <!-- (на мобільному йде другою — телефон ближче до початку) -->
+      <!-- Колонка 2: Зв'язатися -->
       <div>
-        <!-- TODO Заголовок колонки: opacity /60, uppercase text-xs tracking-wider —
-             візуально "ярлик", а не заголовок. -->
-        <h3 class="text-xs uppercase tracking-wider mb-4">
+        <h3 class="mb-4 text-xs uppercase tracking-wider text-cream/60">
           Зв'язатися
         </h3>
-		 
-        <!-- Оптові поставки — окремим акцентом -->
-        <!-- TODO Колір цього посилання: акцент бренду (оранжевий) — щоб виділявся
-             серед сірого тексту колонки. Або через стрілку →. -->
+
+        <!-- Оптові поставки — акцентом бренду -->
         <a
-          href={`${base}wholesale`}
-          class="inline-flex items-center gap-1 font-medium mb-4 hover:underline"
+          href={`${base}wholesale/`}
+          class="mb-4 inline-flex items-center gap-1 font-medium text-primary transition hover:text-accent-red"
         >
           Оптові поставки
           <span aria-hidden="true">→</span>
         </a>
 
-        <!-- TODO <address> — семантично правильна обгортка для контактної інформації.
-             За замовчуванням курсив — прибрати через `not-italic`. -->
-        <address class="not-italic text-sm space-y-2">
-          <!-- TODO ВАЖЛИВО: tel: НЕ ставити target="_blank" (урок тижня 6) -->
+        <address class="space-y-2 text-sm not-italic text-cream/80">
           <div>
-            <a href="tel:+380961234567" class="hover:underline">
+            <a href="tel:+380961234567" class="transition hover:text-primary">
               +380 96 123 4567
             </a>
           </div>
           <div>
-            <a href="mailto:samalipyla@example.com" class="hover:underline">
+            <a href="mailto:samalipyla@example.com" class="transition hover:text-primary">
               samalipyla@example.com
             </a>
           </div>
-          <div>
+          <div class="text-cream/60">
             Щодня 9:00–21:00
           </div>
         </address>
@@ -78,38 +62,37 @@ const currentYear = new Date().getFullYear();
 
       <!-- Колонка 3: Навігація сайту -->
       <nav aria-label="Навігація у футері">
-        <h3 class="text-xs uppercase tracking-wider mb-4">
+        <h3 class="mb-4 text-xs uppercase tracking-wider text-cream/60">
           Сайт
         </h3>
-        <ul class="space-y-2 text-sm">
-          <li><a href={`${base}catalog`} class="hover:underline">Меню</a></li>
-          <li><a href={`${base}locations`} class="hover:underline">Локації</a></li>
-          <li><a href={`${base}about`} class="hover:underline">Про нас</a></li>
-          <li><a href={`${base}contacts`} class="hover:underline">Контакти</a></li>
+        <ul class="space-y-2 text-sm text-cream/80">
+          <li><a href={`${base}catalog/`} class="transition hover:text-primary">Меню</a></li>
+          <li><a href={`${base}locations/`} class="transition hover:text-primary">Локації</a></li>
+          <li><a href={`${base}about/`} class="transition hover:text-primary">Про нас</a></li>
+          <li><a href={`${base}contacts/`} class="transition hover:text-primary">Контакти</a></li>
         </ul>
       </nav>
 
       <!-- Колонка 4: Соцмережі -->
       <div>
-        <h3 class="text-xs uppercase tracking-wider mb-4">
+        <h3 class="mb-4 text-xs uppercase tracking-wider text-cream/60">
           Ми у соцмережах
         </h3>
-        <ul class="space-y-2 text-sm">
-          <!-- TODO ВАЖЛИВО: rel="noopener noreferrer" обов'язково.
-               БЕЗ опечатки "noopner" (урок тижня 6). -->
-          <!-- TODO Іконки: lucide.dev або iconify.design (Instagram, Telegram, Facebook).
-               Розмір 20-24px, той самий колір що й текст. -->
+        <ul class="space-y-2 text-sm text-cream/80">
           <li>
             <a
               href="https://www.instagram.com/samalipyla/"
               target="_blank"
               rel="noopener noreferrer"
-              class="inline-flex items-center gap-2 hover:underline"
+              class="inline-flex items-center gap-2 transition hover:text-primary"
             >
-              <span aria-hidden="true">[IG]</span>
+              <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <rect x="2" y="2" width="20" height="20" rx="5"></rect>
+                <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+                <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+              </svg>
               Instagram
-              <!-- TODO Маленька підпис /60 — "головний канал" -->
-              <span class="text-xs opacity-60">— головний канал</span>
+              <span class="text-xs text-cream/50">— головний канал</span>
             </a>
           </li>
           <li>
@@ -117,10 +100,12 @@ const currentYear = new Date().getFullYear();
               href="https://www.facebook.com/SamaLipylaVinnytsia/reels/"
               target="_blank"
               rel="noopener noreferrer"
-              class="inline-flex items-center gap-2 hover:underline"
+              class="inline-flex items-center gap-2 transition hover:text-primary"
             >
-              <span aria-hidden="true">[FB]</span>
-              Facebook <span class="text-xs opacity-60">— Вінниця</span>
+              <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
+              </svg>
+              Facebook <span class="text-xs text-cream/50">— Вінниця</span>
             </a>
           </li>
         </ul>
@@ -129,27 +114,20 @@ const currentYear = new Date().getFullYear();
     </div>
 
     <!-- ===== Нижня полоса ===== -->
-    <!-- TODO border-top: тонка лінія, основний колір тексту з прозорістю /20 -->
-    <div class="border-t pt-8 space-y-3 text-xs">
+    <div class="space-y-3 border-t border-cream/15 pt-8 text-xs text-cream/70">
 
-      <!-- Копірайт + посилання на політику -->
-      <!-- TODO Колір: основний колір тексту з прозорістю /70 -->
-      <div class="flex flex-col sm:flex-row sm:justify-between gap-2">
-        <p>
-          © {currentYear} Сама Ліпила
-        </p>
-        <a href={`${base}privacy`} class="hover:underline">
+      <div class="flex flex-col gap-2 sm:flex-row sm:justify-between">
+        <p>© {currentYear} Сама Ліпила</p>
+        <a href={`${base}privacy/`} class="transition hover:text-primary">
           Політика конфіденційності
         </a>
       </div>
 
-      <!-- TODO Дисклеймери: opacity /50 — найслабша ієрархія на сторінці.
-           Видно, але не привертає увагу. Розмір залишити text-xs. -->
-      <p class="opacity-70">
+      <p class="text-cream/50">
         Концепт-редизайн існуючого бренду. Навчальний проєкт для портфоліо.
         Не пов'язаний з офіційною студією Сама Ліпила.
       </p>
-      <p class="opacity-70">
+      <p class="text-cream/50">
         Відгуки на сторінці — приклади для концепт-редизайну,
         не реальні відгуки покупців.
       </p>

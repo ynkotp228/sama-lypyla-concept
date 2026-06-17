@@ -1,6 +1,4 @@
 ---
- 
-
 import { Picture } from "astro:assets";
 import b2bImage from "../../assets/images/MainPageImages/b2b.webp";
 
@@ -17,55 +15,43 @@ const benefits: Benefit[] = [
 const base = import.meta.env.BASE_URL;
 ---
 
-<!-- 
-  [ BG секції: глибокий синій (#2B5F8C) або тёмно-коричневий (#2A1810).
-    Це ПЕРША секція з темним фоном — створює візуальний контраст з рештою. ]
--->
-<section class="py-16 md:py-24">
+<section class="bg-deep-blue py-16 text-cream md:py-24">
   <div class="mx-auto max-w-6xl px-4">
     <div class="grid gap-10 md:grid-cols-2 md:items-center md:gap-16">
-      
+
       <!-- ── Текстовий блок ── -->
       <div>
-        <h2 class="text-3xl md:text-5xl">
-          <!-- [ TEXT: кремовий | FONT: display/serif Lora ] -->
+        <h2 class="font-display text-3xl font-semibold md:text-5xl">
           Співпраця з бізнесом
         </h2>
-        <p class="mt-4 text-base leading-relaxed md:text-lg">
-          <!-- [ TEXT: кремовий з прозорістю ~85% ] -->
+        <p class="mt-4 text-base leading-relaxed text-cream/85 md:text-lg">
           Поставляємо напівфабрикати ресторанам, кафе, магазинам і закладам харчування у Львові та Вінниці.
         </p>
-        
+
         <!-- Переваги -->
         <ul class="mt-8 grid grid-cols-3 gap-4 md:mt-10">
           {benefits.map((b) => (
             <li>
-              <p class="text-3xl font-medium md:text-4xl">
-                <!-- [ TEXT: оранжевий бренд — акцент на темному фоні ] -->
+              <p class="font-display text-3xl font-semibold text-primary md:text-4xl">
                 {b.value}
               </p>
-              <p class="mt-1 text-sm leading-snug">
-                <!-- [ TEXT: кремовий з прозорістю ~70% ] -->
+              <p class="mt-1 text-sm leading-snug text-cream/70">
                 {b.label}
               </p>
             </li>
           ))}
         </ul>
-        
+
         <!-- CTA -->
         <a
-        
-          href={`${base}wholesale`}
-          class="mt-10 inline-flex items-center gap-2 rounded-md px-6 py-3 font-medium transition-opacity hover:opacity-90">
-          <!-- 
-            [ BG кнопки: оранжевий бренд (#E97817) або акцентний червоний (#C24A1F)
-              TEXT кнопки: білий або кремовий ]
-          -->
+          href={`${base}wholesale/`}
+          class="mt-10 inline-flex items-center gap-2 rounded-full bg-primary px-7 py-3.5 font-medium text-white shadow-lg shadow-black/10 transition hover:bg-accent-red"
+        >
           Обговорити поставки
           <span aria-hidden="true">→</span>
         </a>
       </div>
-      
+
       <!-- ── Візуал ── -->
       <div>
         <Picture
@@ -74,7 +60,7 @@ const base = import.meta.env.BASE_URL;
           widths={[400, 600, 800]}
           sizes="(min-width: 768px) 50vw, 100vw"
           formats={['avif', 'webp']}
-          class="w-full rounded-lg"
+          class="overflow-hidden rounded-2xl shadow-xl [&_img]:aspect-4/3 [&_img]:w-full [&_img]:object-cover"
         />
       </div>
     </div>
