@@ -1,0 +1,24 @@
+---
+import { Picture } from 'astro:assets';
+interface Props {
+    title: string;
+    id: string;
+    url: string;
+    img: any;
+    alt: string;
+}
+const { title, id, url, alt, img } = Astro.props;
+---
+
+
+
+<a href={url} id={id}>
+    <Picture 
+        src={img}
+        alt={alt}
+         
+        />
+    <div>
+        <h3>{title}</h3>
+    </div>
+</a>

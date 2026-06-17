@@ -9,6 +9,6 @@ export default defineConfig({
     plugins: [tailwindcss()],
   },
   site: "https://ynkotp228.github.io",
-  base: "/CHANGE-ME/",
+  base: "/sama-lipyla-concept/",
   integrations: [sitemap()],
 });

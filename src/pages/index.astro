@@ -1,15 +1,23 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import Header from '../components/Header.astro';
-import Footer from '../components/Footer.astro';
-import Hero from '../components/Hero.astro';
-
+import Hero from '../components/MainPageComponents/Hero.astro';
+import B2BTeaser from '../components/MainPageComponents/B2BTeaser.astro';
+import Categories from '../components/MainPageComponents/Categories.astro';
+import HowToMakeOrder from '../components/MainPageComponents/HowToMakeOrder.astro';
+import LocationsTeaser from '../components/MainPageComponents/LocationsTeaser.astro';
+import Popular from '../components/MainPageComponents/Popular.astro';
+import Reviews from '../components/MainPageComponents/Reviews.astro';
+import USP from '../components/MainPageComponents/USP.astro';
 ---
 <Layout>
-	<Header />
 	<main>
 	<Hero />
-		 
+	<Categories />
+	<USP />
+	<Popular />
+	<HowToMakeOrder />
+	<Reviews />
+	<B2BTeaser />
+	<LocationsTeaser />
 	</main>
-	<Footer />
 </Layout>

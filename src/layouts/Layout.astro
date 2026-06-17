@@ -1,7 +1,9 @@
 ---
 import '../styles/global.css';
-import ogDefault from '../assets/images/heroMainPage.webp';
- 
+import ogDefault from '../assets/images/MainPageImages/heroMainPage.webp';
+import Header from '../components/LayoutComponents/Header.astro';
+import Footer from '../components/LayoutComponents/Footer.astro';
+
 interface Props {
 	title?: string;
 	description?: string;
@@ -9,8 +11,8 @@ interface Props {
 }
 
 const {
-	title = '#@ Назва сайту',
-	description = ' ',
+	title = 'Сама Ліпила',
+	description = 'Сама Ліпила - це магазин домашніх напівфабриків ручної ліпки, що знаходиться у Вінниці та Львові.',
 	image = ogDefault.src,
 } = Astro.props;
 
@@ -30,7 +32,7 @@ const imageURL = new URL(image, Astro.site);
 		<meta name="description" content={description} />
 		<!-- Open Graph -->
 		<meta property="og:type" content="website" />
-		<meta property="og:site_name" content="#@" />
+		<meta property="og:site_name" content="Сама Ліпила - це магазин домашніх напівфабриків ручної ліпки, що знаходиться у Вінниці та Львові. Окрім офлайн точок продажу, ми запровадили доставку ваших улюблених страв." />
 		<meta property="og:locale" content="uk_UA" />
 		<meta property="og:title" content={title} />
 		<meta property="og:description" content={description} />
@@ -53,7 +55,9 @@ const imageURL = new URL(image, Astro.site);
 		<title>{title}</title>
 	</head>
 	<body class="">
+		<Header />
 		<slot /> 
+		<Footer />
 		<script>
 			import '../scripts/menu.js'
 		</script>

@@ -1,0 +1,29 @@
+---
+import { Picture } from "astro:assets";
+import heroMainPage from '../../assets/images/MainPageImages/HeroMainPage.webp';
+import logoSL from '../../assets/images/logoSL.png';
+const base = import.meta.env.BASE_URL;
+---
+<section> 
+    <div>
+        <Picture 
+            src={heroMainPage}
+            alt="Зображення апетитних пельменів у тарілці"
+            widths={[240, 540, 720, heroMainPage.width]}
+            sizes="100vw"
+            formats={['avif', 'webp']}
+            loading="eager"
+            fetchpriority="high"  />
+        <div>
+            <Picture 
+                src={logoSL}
+                alt="Логотип Сама Ліпила"  />
+            <h1>Напівфабрикат може бути якісним</h1>
+            <p>Ліпимо вручну, у тебе на очах. Запас домашньої їжі у твоїй морозилці — на день, коли не хочеш готувати, але хочеш по-домашньому.</p>
+        </div>
+        <div>
+            <a href=`${base}catalog`> До меню</a>
+            <a href="#USP"> Як ми робимо</a>
+        </div>
+    </div>
+</section>

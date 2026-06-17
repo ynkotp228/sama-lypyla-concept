@@ -1,0 +1,82 @@
+---
+ 
+
+import { Picture } from "astro:assets";
+import b2bImage from "../../assets/images/MainPageImages/b2b.webp";
+
+interface Benefit {
+  value: string;
+  label: string;
+}
+
+const benefits: Benefit[] = [
+  { value: "5 кг", label: "Мінімальний обʼєм" },
+  { value: "3×", label: "Доставки на тиждень" },
+  { value: "1:1", label: "Особистий менеджер" },
+];
+const base = import.meta.env.BASE_URL;
+---
+
+<!-- 
+  [ BG секції: глибокий синій (#2B5F8C) або тёмно-коричневий (#2A1810).
+    Це ПЕРША секція з темним фоном — створює візуальний контраст з рештою. ]
+-->
+<section class="py-16 md:py-24">
+  <div class="mx-auto max-w-6xl px-4">
+    <div class="grid gap-10 md:grid-cols-2 md:items-center md:gap-16">
+      
+      <!-- ── Текстовий блок ── -->
+      <div>
+        <h2 class="text-3xl md:text-5xl">
+          <!-- [ TEXT: кремовий | FONT: display/serif Lora ] -->
+          Співпраця з бізнесом
+        </h2>
+        <p class="mt-4 text-base leading-relaxed md:text-lg">
+          <!-- [ TEXT: кремовий з прозорістю ~85% ] -->
+          Поставляємо напівфабрикати ресторанам, кафе, магазинам і закладам харчування у Львові та Вінниці.
+        </p>
+        
+        <!-- Переваги -->
+        <ul class="mt-8 grid grid-cols-3 gap-4 md:mt-10">
+          {benefits.map((b) => (
+            <li>
+              <p class="text-3xl font-medium md:text-4xl">
+                <!-- [ TEXT: оранжевий бренд — акцент на темному фоні ] -->
+                {b.value}
+              </p>
+              <p class="mt-1 text-sm leading-snug">
+                <!-- [ TEXT: кремовий з прозорістю ~70% ] -->
+                {b.label}
+              </p>
+            </li>
+          ))}
+        </ul>
+        
+        <!-- CTA -->
+        <a
+        
+          href={`${base}wholesale`}
+          class="mt-10 inline-flex items-center gap-2 rounded-md px-6 py-3 font-medium transition-opacity hover:opacity-90">
+          <!-- 
+            [ BG кнопки: оранжевий бренд (#E97817) або акцентний червоний (#C24A1F)
+              TEXT кнопки: білий або кремовий ]
+          -->
+          Обговорити поставки
+          <span aria-hidden="true">→</span>
+        </a>
+      </div>
+      
+      <!-- ── Візуал ── -->
+      <div>
+        <Picture
+          src={b2bImage}
+          alt="Велика партія напівфабрикатів готується до відправки в заклад"
+          widths={[400, 600, 800]}
+          sizes="(min-width: 768px) 50vw, 100vw"
+          formats={['avif', 'webp']}
+          class="w-full rounded-lg"
+        />
+      </div>
+    </div>
+  </div>
+</section>

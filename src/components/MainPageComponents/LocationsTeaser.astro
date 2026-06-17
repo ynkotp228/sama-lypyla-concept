@@ -1,0 +1,86 @@
+---
+// src/components/LocationsTeaser.astro
+const base = import.meta.env.BASE_URL;
+---
+
+<!-- TODO Фон секції:
+     світлий акцентний (кремовий) — щоб контрастувати з темним B2B-блоком нижче.
+     Якщо вся сторінка кремова — лиши без фону. -->
+<section
+  class="py-20"
+  aria-labelledby="locations-heading"
+>
+  <div class="container mx-auto px-4 max-w-5xl">
+    <header class="text-center mb-12">
+      <!-- TODO Колір H2: основний темний текст бренду.
+           Шрифт: display/serif (Lora). -->
+      <h2
+        id="locations-heading"
+        class="text-4xl md:text-5xl mb-4"
+      >
+        Заходь до нас
+      </h2>
+
+      <!-- TODO Колір підзаголовка: той самий темний, але приглушений
+           (opacity /70 або /80) — щоб не конкурував з H2. -->
+      <p class="text-lg max-w-2xl mx-auto">
+        У Львові 5 точок, у Вінниці — 18. Обери найближчу.
+      </p>
+    </header>
+
+    <div class="grid md:grid-cols-2 gap-6 mb-10">
+      <!-- TODO Картка міста:
+           - фон: білий або світліший за фон секції (контраст від кремового)
+           - обводка: тонка, темна з прозорістю /10 — щоб білий прямокутник
+             не "висів у повітрі" на кремовому фоні
+           - hover: обводка перетворюється на основний акцент (оранжевий),
+             додається легка тінь -->
+        <a
+        href={`${base}locations#lviv`}
+        class="group block p-8 rounded-2xl border hover:shadow-lg transition" >
+        <div class="flex items-start justify-between gap-4">
+          <div>
+            <!-- TODO Колір H3 та "X точок": основний темний текст,
+                 "X точок" /70 для ієрархії. Шрифт H3: display/serif. -->
+            <h3 class="text-3xl mb-2">Львів</h3>
+            <p>5 точок у місті</p>
+          </div>
+          <!-- TODO Колір стрілки: основний акцент бренду (оранжевий). -->
+          <span
+            class="text-2xl group-hover:translate-x-1 transition"
+            aria-hidden="true"
+          >→</span>
+        </div>
+      </a>
+
+      <a
+        href={`${base}locations#vinnytsia`}
+        class="group block p-8 rounded-2xl border hover:shadow-lg transition"
+      > 
+        <div class="flex items-start justify-between gap-4">
+          <div>
+            <h3 class="text-3xl mb-2">Вінниця</h3>
+            <p>18 точок у місті</p>
+          </div>
+          <span
+            class="text-2xl group-hover:translate-x-1 transition"
+            aria-hidden="true"
+          >→</span>
+        </div>
+      </a>
+    </div>
+
+    <div class="text-center">
+      <!-- TODO CTA-посилання:
+           - основний колір тексту: акцент бренду (оранжевий)
+           - hover: вторинний акцент (червоний) або потемніння того ж оранжевого -->
+      <a
+        href={`${base}locations`}
+        class="inline-flex items-center gap-2 font-medium transition"
+      >
+        Усі локації
+        <span aria-hidden="true">→</span>
+      </a>
+    </div>
+  </div>
+</section>

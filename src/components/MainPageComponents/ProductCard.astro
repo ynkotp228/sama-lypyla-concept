@@ -1,0 +1,26 @@
+---
+import { Picture } from "astro:assets";
+import type { Product } from "../../data/products";
+
+interface Props {
+    product: Product;
+}
+
+const { product } = Astro.props;
+const base = import.meta.env.BASE_URL;
+const url = `${base}catalog/${product.id}`;
+---
+<div>
+    <a href={url} id={product.id}>
+        <Picture
+            src={product.image}
+            alt={product.alt}
+            formats={['avif', 'webp']}
+            loading="lazy"
+            fetchpriority="low" />
+        <div>
+            <h3>{product.name}</h3>
+            <p>{product.price} грн</p>
+        </div>
+    </a>
+</div>

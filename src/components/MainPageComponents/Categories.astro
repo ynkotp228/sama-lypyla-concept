@@ -1,0 +1,88 @@
+---
+import varenuki from '../../assets/images/MainPageImages/categories/varenuki.webp';
+import pelmeni from '../../assets/images/MainPageImages/categories/pelmeni.webp';
+import syrniki from '../../assets/images/MainPageImages/categories/sirniki.webp';
+import mlynckiSoloni from '../../assets/images/MainPageImages/categories/mlyntsi-soloni.webp';
+import mlynckiSolodki from '../../assets/images/MainPageImages/categories/mlyntsi-solodki.webp';
+import pizza from '../../assets/images/MainPageImages/categories/pizza.webp';
+import vupichkaZmyasom from '../../assets/images/MainPageImages/categories/vupichka-z-myasom.webp';
+import kotleti from '../../assets/images/MainPageImages/categories/kotleti.webp';
+
+import CategoriesItems from "./CategoriesItems.astro"
+const base = import.meta.env.BASE_URL;
+const categories = [
+    {
+        id: "1",
+        title: "Вареники",
+        url: `${base}catalog/category/varenuki`,
+        img: varenuki,
+        alt: "Апетитні вареники у тарілці",
+    },
+    {
+        id: "2",
+        title: "Пельмені та хінкалі",
+        url: `${base}catalog/category/pelmeni`,
+        img: pelmeni,
+        alt: "Апетитні пельмені у тарілці",
+    },
+    {
+        id: "3",
+        title: "Сирники та запіканки",
+        url: `${base}catalog/category/syrniki`,
+        img: syrniki,
+        alt: "Апетитні сирники у тарілці",
+    },
+    {
+        id: "4",
+        title: "Млинці солоні",
+        url: `${base}catalog/category/mlynci-soloni`,
+        img: mlynckiSoloni,
+        alt: "Поскладані млинці з м'ясом на рушнику",
+    },
+    {
+        id: "5",
+        title: "Млинці солодкі",
+        url: `${base}catalog/category/mlynci-solodki`,
+        img: mlynckiSolodki,
+        alt: "3 млинця із сиром у тарілці приправлені полуницею",
+    },
+    {
+        id: "6",
+        title: "Піца",
+        url: `${base}catalog/category/pizza`,
+        img: pizza,
+        alt: "Піца із грибами та м'ясом на тарілці",
+    },
+    {
+        id: "7",
+        title: "Випічка з м'ясом",
+        url: `${base}catalog/category/vupichka-z-myasom`,
+        img: vupichkaZmyasom,
+        alt: "Смачний чебурек на тарілці із соусом"
+    },
+    {
+        id: "8",
+        title: "М'ясні вироби",
+        url: `${base}catalog/category/myasnii-virobi`,
+        img: kotleti,
+        alt: "3 апетитні котлети на пюре у тарілці"
+    },
+]
+---
+
+<section>
+    <h2> Меню </h2>
+    <div>
+        {
+            categories.map((category) => (
+                <CategoriesItems
+                    title={category.title}
+                    id={category.id}
+                    url={category.url}
+                    img={category.img}
+                    alt={category.alt}
+                />
+            ))
+        }
+    </div>
+</section>
