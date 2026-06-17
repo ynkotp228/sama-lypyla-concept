@@ -1,0 +1,60 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { categories, getProductsByCategory, getTagsForCategory, tagLabels } from '../../data/products';
+import ProductsCard from '../../components/CatalogCategoryComponents/ProductsCard.astro';
+import FilterButton from '../../components/CatalogCategoryComponents/FilterButton.astro';
+
+export function getStaticPaths() {
+  return categories.map(cat => ({
+    params: { category: cat.slug },
+    props: {
+      categoryName: cat.name,
+      products: getProductsByCategory(cat.slug),
+      tags: getTagsForCategory(cat.slug),
+    },
+  }));
+}
+
+const { categoryName, products, tags } = Astro.props;
+---
+<Layout title={`${categoryName} — Сама Ліпила`}>
+  <section class="mx-auto max-w-6xl px-4 py-8">
+    <h1 class="mb-6 text-2xl font-semibold sm:text-3xl">{categoryName}</h1>
+
+    {tags.length > 0 && (
+      <div class="mb-8 flex flex-wrap gap-2">
+        <FilterButton filter="all" label="Усі" active />
+        {tags.map(tag => <FilterButton filter={tag} label={tagLabels[tag]} />)}
+      </div>
+    )}
+
+    <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      {products.map(product => <ProductsCard product={product} />)}
+    </div>
+  </section>
+
+  <script>
+    // 1. Усі кнопки фільтра і всі карточки.
+    const buttons = document.querySelectorAll<HTMLButtonElement>('[data-filter]');
+    const cards = document.querySelectorAll<HTMLElement>('.product-card');
+
+    // 2. Клік на кнопку.
+    buttons.forEach(button => {
+      button.addEventListener('click', () => {
+        const filter = button.dataset.filter;
+        if (!filter) return;
+
+        // 3. Кожна карточка: показати ("all" або є тег) чи сховати.
+        cards.forEach(card => {
+          const cardTags = card.dataset.tags?.split(' ') ?? [];
+          const show = filter === 'all' || cardTags.includes(filter);
+          card.classList.toggle('hidden', !show);
+        });
+
+        // 4. Підсвітити активну кнопку (взаємовиключно, як радіо).
+        buttons.forEach(b => b.classList.remove('is-active'));
+        button.classList.add('is-active');
+      });
+    });
+  </script>
+</Layout>

@@ -1,0 +1,24 @@
+---
+// Кнопка фільтра. data-filter — значення тега (або "all" для "Усі").
+// Скрипт у [category].astro читає data-filter і ховає/показує карточки.
+interface Props {
+  filter: string;   // "all" | ProductTag
+  label: string;    // людська підпис, напр. "М'ясне"
+  active?: boolean;  // початково активна кнопка (зазвичай "Усі")
+}
+
+const { filter, label, active = false } = Astro.props;
+---
+
+<button
+  type="button"
+  data-filter={filter}
+  class:list={[
+    "rounded-full border border-gray-300 px-4 py-1.5 text-sm font-medium transition-colors",
+    "hover:border-orange-400 hover:text-orange-600",
+    "[&.is-active]:border-orange-500 [&.is-active]:bg-orange-500 [&.is-active]:text-white",
+    { "is-active": active },
+  ]}
+>
+  {label}
+</button>

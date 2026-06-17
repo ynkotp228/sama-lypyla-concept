@@ -1,6 +1,6 @@
 ---
 import '../styles/global.css';
-import ogDefault from '../assets/images/MainPageImages/heroMainPage.webp';
+import ogDefault from '../assets/images/MainPageImages/HeroMainPage.webp';
 import Header from '../components/LayoutComponents/Header.astro';
 import Footer from '../components/LayoutComponents/Footer.astro';
 
@@ -30,9 +30,10 @@ const imageURL = new URL(image, Astro.site);
         <link rel="apple-touch-icon" sizes="180x180" href={`${import.meta.env.BASE_URL}apple-touch-icon.png`} />
 		<link rel="canonical" href={canonicalURL} />
 		<meta name="description" content={description} />
+		<meta name="robots" content="noindex, nofollow">
 		<!-- Open Graph -->
 		<meta property="og:type" content="website" />
-		<meta property="og:site_name" content="Сама Ліпила - це магазин домашніх напівфабриків ручної ліпки, що знаходиться у Вінниці та Львові. Окрім офлайн точок продажу, ми запровадили доставку ваших улюблених страв." />
+		<meta property="og:site_name" content="Сама Ліпила"/>
 		<meta property="og:locale" content="uk_UA" />
 		<meta property="og:title" content={title} />
 		<meta property="og:description" content={description} />

@@ -1,0 +1,23 @@
+---
+import Layout from "./Layout.astro";
+import { Image } from 'astro:assets';
+import logo from '../assets/images/logoSL.png';
+const base = import.meta.env.BASE_URL;
+---
+<Layout>
+    <div>
+        <Image 
+            src={logo}
+            alt="Логотип бренду 'Сама Ліпила'"
+            width={64}
+            height={64}
+            class="h-16 w-16" 
+        />
+        <h1> Сторінка в розробці </h1>
+    </div>
+    <div>
+        <p> Приносимо свої вибачення, але дана сторінка ще не готова та перебуває у активній розробкці!</p>
+        <a href=`${base}`> Повернутися на головну </a>
+    </div>
+    <slot />
+</Layout>

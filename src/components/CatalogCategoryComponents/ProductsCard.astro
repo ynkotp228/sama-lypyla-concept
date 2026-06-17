@@ -1,0 +1,38 @@
+---
+// src/components/CatalogCategoryComponents/ProductsCard.astro
+import { Picture } from 'astro:assets';
+import type { Product } from '../../data/products.ts';
+
+interface Props {
+  product: Product;
+}
+
+const { product } = Astro.props;
+// data-tags — кирпич №1 фільтра: теги одним рядком через пробіл.
+const tags = (product.tags ?? []).join(' ');
+---
+
+<article
+  class="product-card group flex flex-col overflow-hidden rounded-lg border border-gray-200 bg-white"
+  data-tags={tags}
+>
+  <Picture
+    src={product.image}
+    widths={[280, 350, 600]}
+    sizes="(min-width: 1024px) 280px, (min-width: 640px) 350px, 100vw"
+    formats={['avif', 'webp']}
+    alt={product.alt}
+    class="[&_img]:aspect-4/3 [&_img]:w-full [&_img]:object-cover [&_img]:transition-transform [&_img]:duration-300 group-hover:[&_img]:scale-105"
+  />
+  <div class="flex flex-1 flex-col gap-1 p-4">
+    <h3 class="font-medium">{product.name}</h3>
+    <p class="text-sm text-gray-600">{product.weight} · {product.price} ₴</p>
+    <button
+      type="button"
+      data-product-id={product.id}
+      class="mt-auto rounded-md bg-orange-500 px-3 py-2 text-sm font-medium text-white transition-colors hover:bg-orange-600"
+    >
+      + в кошик
+    </button>
+  </div>
+</article>

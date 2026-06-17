@@ -96,6 +96,16 @@ export type ProductTag =
   | "z-syrom"
   | "gostre";
 
+// Людські підписи тегів для кнопок-фільтрів.
+// Порядок ключів тут = порядок кнопок у фільтрі (див. getTagsForCategory).
+export const tagLabels: Record<ProductTag, string> = {
+  "myasne": "М'ясне",
+  "pisne": "Пісне",
+  "z-syrom": "З сиром",
+  "dytyache": "Дитяче",
+  "gostre": "Гостре",
+};
+
 export interface Product {
   id: string;             // унікальний slug: "vareniki-potato"
   name: string;           // "Вареники з картоплею"
@@ -823,4 +833,14 @@ export function getHits(limit = 4): Product[] {
 
 export function getCategoryBySlug(slug: CategorySlug): Category | undefined {
   return categories.find(c => c.slug === slug);
+}
+
+// Які теги реально зустрічаються в товарах цієї категорії.
+// Повертає їх у фіксованому порядку tagLabels, щоб кнопки не стрибали.
+export function getTagsForCategory(slug: CategorySlug): ProductTag[] {
+  const present = new Set<ProductTag>();
+  for (const product of getProductsByCategory(slug)) {
+    product.tags?.forEach(tag => present.add(tag));
+  }
+  return (Object.keys(tagLabels) as ProductTag[]).filter(tag => present.has(tag));
 }
