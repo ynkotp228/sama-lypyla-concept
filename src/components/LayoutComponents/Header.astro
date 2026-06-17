@@ -59,3 +59,26 @@ const cartHref = `${base}cart/`;
 	</div>
 </header>
 <BurgerPanel />
+<script>
+	import { getCartCount } from '../../scripts/cart.js';
+
+  const countEl = document.getElementById('cart-count');
+
+  function updateCounter() {
+    if (!countEl) return;
+    const count = getCartCount();
+    if (count > 0) {
+      countEl.textContent = String(count);
+      countEl.hidden = false;
+    } else {
+      countEl.hidden = true;
+    }
+  }
+
+  // 1. Оновити при завантаженні (Astro генерує HTML без LS,
+  //    тому при першому рендері counter не знає скільки в кошику)
+  updateCounter();
+
+  // 2. Оновлювати при кожній зміні кошика
+  window.addEventListener('cart-updated', updateCounter);
+</script>

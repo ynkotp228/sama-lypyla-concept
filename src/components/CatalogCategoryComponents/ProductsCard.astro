@@ -69,9 +69,24 @@ const badgeClass: Record<Badge['kind'], string> = {
     <button
       type="button"
       data-product-id={product.id}
+      aria-label={`Додати ${product.name} в кошик`}
       class="mt-auto rounded-lg bg-primary px-3 py-2.5 text-sm font-medium text-white transition-colors hover:bg-accent-red"
     >
       + в кошик
     </button>
   </div>
 </article>
+<script>
+  import { addToCart } from "../../scripts/cart";
+   document.addEventListener('click', (e) => {
+    const target = e.target as HTMLElement;
+    const btn = target.closest('button[data-product-id]');
+    if (!btn) return;
+
+    const productId = btn.getAttribute('data-product-id');
+    if (productId) {
+      addToCart(productId);
+      // TODO: візуальний фідбек (опціонально) — наприклад, кнопка моргне зеленим
+    }
+  });
+</script>

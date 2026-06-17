@@ -12,6 +12,8 @@
 
 - **Astro 6** (`.astro`-компоненты, файловая маршрутизация, `getStaticPaths` для динамических маршрутов).
 - **Tailwind v4** через `@tailwindcss/vite` — конфигурация живёт в CSS (`src/styles/global.css` с `@theme` / `@custom-variant`), **без `tailwind.config.js`**.
+- **Дизайн-токени** в `global.css` `@theme` (палитра брифа): `primary` (#E97817), `accent-red` (#C24A1F, CTA/hover), `deep-blue` (#2B5F8C), `cream` (#FBF6EE, фон), `warm` (#2A1810, текст) → утилиты `bg-/text-/border-`. Базовый слой задаёт кремовый фон + тёплый текст + serif-заголовки.
+- **Шрифты**: `font-display` = Lora (заголовки), `font-sans` = Inter (тело). Self-hosted через `@fontsource/lora` + `@fontsource/inter` (импорты весов в `Layout.astro`), **без Google Fonts CDN**.
 - **TypeScript**, `astro/tsconfigs/strict`.
 - Интеграция `@astrojs/sitemap`.
 
@@ -32,7 +34,9 @@ npm run preview
 const base = import.meta.env.BASE_URL;
 <a href={`${base}catalog/${slug}`}>   // НЕ href="/catalog/..."
 ```
-Жёстко прописанные абсолютные пути от корня (`/catalog`) ломаются на GitHub Pages. Централизованная навигация — в `src/data/nav.ts`.
+Жёстко прописанные абсолютные пути от корня (`/catalog`) ломаются на GitHub Pages. Централизованная навигация — в `src/data/nav.ts` (ссылки с завершающим `/`, чтобы избежать 301-редиректа).
+
+⚠️ **Регистр имён файлов.** CI собирает на Linux (`ubuntu-latest`, `.github/workflows/deploy.yml`) — регистр в импортах ассетов должен **точно** совпадать с именем файла на диске (`HeroMainPage.webp`, не `heroMainPage.webp`). Локальная сборка на Windows регистронезависима и пропустит ошибку, а деплой упадёт.
 
 ## Структура
 
@@ -41,19 +45,22 @@ src/
   data/
     products.ts        # ← единственный источник правды (см. ниже)
     nav.ts             # ссылки навигации хедера/футера (использует BASE_URL)
-  layouts/Layout.astro # оболочка <html>: SEO/OG-мета, шрифты, Header, <slot/>, Footer, подключает menu.js
+  layouts/
+    Layout.astro           # оболочка <html>: SEO/OG-мета, шрифты (@fontsource), Header, <slot/>, Footer, menu.js
+    ComingSoon.astro       # «сторінка в розробці»: лого + заголовок + <slot/> + CTA; проп title
   pages/
     index.astro              # главная = композиция из MainPageComponents
     catalog/[category].astro # динамика: 8 страниц категорий через getStaticPaths + фильтры по тегам
-    catalog/index.astro      # лендинг каталога — переиспользует MainPageComponents/Categories
-    about|cart|contacts|locations|privacy|wholesale.astro  # (заглушки, пустые)
+    catalog/index.astro      # лендинг каталога — PageHeader + Categories(showHeader=false) + Popular
+    about|cart|contacts|locations|privacy|wholesale.astro  # заглушки на ComingSoon (с title); contacts ещё рендерит Form
     404.astro, robots.txt.ts
   components/
-    LayoutComponents/  Header, Footer
+    PageHeader.astro   # mini-hero для внутренних страниц (заголовок + описание); сейчас на /catalog
+    LayoutComponents/  Header (лого+назва, nav, иконка корзины со счётчиком #cart-count), Footer
     Menu/              BurgerButton, BurgerPanel, Desktop.Nav  (мобильный drawer + десктоп-навигация)
-    MainPageComponents/ Hero, Categories(+CategoriesItems), USP, Popular(+ProductCard),
+    MainPageComponents/ Hero, Categories(+CategoriesItems; проп showHeader), USP, Popular(+ProductCard),
                         HowToMakeOrder, Reviews, B2BTeaser, LocationsTeaser, About
-    CatalogCategoryComponents/ ProductsCard, FilterButton
+    CatalogCategoryComponents/ ProductsCard (бейджи + <details>), FilterButton
     Form.astro
   scripts/  menu.js (открытие/закрытие drawer), cart.js (заглушка)
   assets/images/  products-ready/<category>/*.jpg, MainPageImages/categories/*.webp, logoSL.png
@@ -75,12 +82,16 @@ public/   фавиконки
 - **`<Picture>`** (`astro:assets`) для адаптивных карточек каталога: `widths={[280,350,600]}` + `sizes` под брейкпоинты сетки + `formats={['avif','webp']}`. **`<Image>`** для ассетов фиксированного размера (логотип). Стилизуй внутренний `<img>` через произвольный селектор Tailwind `[&_img]:...`.
 - **Фильтры категорий** (каталог) — на стороне клиента, без фреймворка: карточки получают `class="product-card"` + `data-tags="tag1 tag2"`; кнопки получают `data-filter`; инлайновый `<script>` переключает `hidden` и `is-active`. Взаимоисключающие (как радио) + сброс «Усі». См. `pages/catalog/[category].astro` и `CatalogCategoryComponents/`.
 - **Мобильное меню** — `menu.js` переключает `is-open` на `#sidebar`/`#sidebar-overlay`; `is-open` — это Tailwind `@custom-variant`, объявленный в `global.css`. Закрывается по Esc / клику по оверлею / клику по ссылке.
-- Брейкпоинты сетки по всему проекту: `grid-cols-1 sm:grid-cols-2 lg:grid-cols-3` (каталог) / `lg:grid-cols-4` (главная). Акцентный цвет: оранжевый (`orange-500/600`).
+- Брейкпоинты сетки по всему проекту: `grid-cols-1 sm:grid-cols-2 lg:grid-cols-3` (каталог) / `lg:grid-cols-4` (главная). Акцентный цвет — токен `primary` (оранжевый бренда), hover/CTA — `accent-red`. Используй токены палитры (`primary/accent-red/deep-blue/cream/warm`), а **не** дефолтные `orange-*/gray-*`.
+- **Бейджи на карточке товара** (`CatalogCategoryComponents/ProductsCard.astro`): максимум 2, приоритет Хіт (`isHit`) → Новинка (`isNew`) → первый тег из `tags[]`. Описание товара — в `<details>` «Детальніше».
+- **Внутренние страницы**: общий мини-герой `PageHeader` (title + description). «В розробці» — лейаут `ComingSoon` (проп `title`, есть `<slot/>` для доп. контента вроде `Form`). Компонент `Categories` принимает `showHeader={false}`, когда заголовок даёт `PageHeader` (чтобы не было двух «Меню»).
+- **Tailwind v4 — канонические утилиты**: градиенты `bg-linear-to-*` (не `bg-gradient-to-*`), data-варианты `data-[state=...]:` (не `[&[data-state=...]]:`).
 
 ## Текущее состояние (на неделю 7)
 
-- **Готово**: модель данных, главная + её компоненты, динамические страницы категорий каталога, фильтры по тегам, лендинг каталога (`catalog/index.astro`, переиспользует `Categories`).
-- **Заглушки/пустые** (плейсхолдеры на 0 байт, которые предстоит заполнить): `about/cart/contacts/locations/privacy/wholesale.astro`, `scripts/cart.js`. В Footer много заметок по стилизации `<!-- TODO -->`.
+- **Готово**: модель данных; вся вёрстка/стилизация по брифу (палитра + Lora/Inter) — главная и её секции, лендинг каталога, страницы категорий (фильтры + бейджи + `<details>`), `ComingSoon`, `404`, форма контактов. Header по IA (+ иконка корзины), Footer оформлен.
+- **Заглушки**: `about/cart/contacts/locations/privacy/wholesale.astro` теперь рендерят оформленный `ComingSoon` (не пустые; `contacts` показывает `Form`). `scripts/cart.js` всё ещё пустой — логика корзины (добавление по `data-product-id`, счётчик `#cart-count`, `localStorage`, страница `/cart`) не реализована.
+- **Дальше**: корзина (`cart.js`), контент `/locations` (адреса + зоны доставки), `/about` и `/wholesale` (неделя 9).
 
 ## Заметки по работе здесь
 
