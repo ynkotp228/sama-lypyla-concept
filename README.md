@@ -20,7 +20,7 @@
 
 ## Live demo
 
-https://ynkotp228.github.io/sama-lipyla-concept/
+https://ynkotp228.github.io/sama-lypyla-concept/
 
 ## Локальний запуск
 
