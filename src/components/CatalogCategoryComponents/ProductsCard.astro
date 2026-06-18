@@ -5,9 +5,10 @@ import { tagLabels, type Product } from '../../data/products.ts';
 
 interface Props {
   product: Product;
+  priority?: boolean; // true для карток першого ряду — щоб LCP-картинка не була lazy
 }
 
-const { product } = Astro.props;
+const { product, priority = false } = Astro.props;
 // data-tags — кирпич №1 фільтра: теги одним рядком через пробіл.
 const tags = (product.tags ?? []).join(' ');
 
@@ -38,6 +39,8 @@ const badgeClass: Record<Badge['kind'], string> = {
       sizes="(min-width: 1024px) 280px, (min-width: 640px) 45vw, 100vw"
       formats={['avif', 'webp']}
       alt={product.alt}
+      loading={priority ? 'eager' : 'lazy'}
+      fetchpriority={priority ? 'high' : 'auto'}
       class="[&_img]:aspect-4/3 [&_img]:w-full [&_img]:object-cover [&_img]:transition-transform [&_img]:duration-500 group-hover:[&_img]:scale-105"
     />
     {badges.length > 0 && (

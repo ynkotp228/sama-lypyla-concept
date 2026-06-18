@@ -38,7 +38,7 @@ const base = import.meta.env.BASE_URL;
     )}
 
     <div class="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-      {products.map(product => <ProductsCard product={product} />)}
+      {products.map((product, i) => <ProductsCard product={product} priority={i < 3} />)}
     </div>
   </section>
 
