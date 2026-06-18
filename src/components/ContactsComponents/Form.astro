@@ -5,7 +5,7 @@
 	<div class="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-warm/10 md:p-8">
 		<h2 class="font-display text-2xl font-semibold text-warm">Питання, відгуки, пропозиції</h2>
 		<p class="mt-2 text-warm/70">
-			Залиште свої контакти — і ми зв'яжемося з вами найближчим часом.
+			Залиш свої контакти — і ми зв'яжемося з тобою найближчим часом.
 		</p>
 
 		<form
@@ -15,7 +15,7 @@
 			class="mt-6 space-y-4"
 		>
 			<div>
-				<label for="name" class="mb-1 block text-sm font-medium text-warm">Ваше ім'я</label>
+				<label for="name" class="mb-1 block text-sm font-medium text-warm">Твоє ім'я</label>
 				<input
 					type="text"
 					id="name"
@@ -29,7 +29,7 @@
 			</div>
 
 			<div>
-				<label for="tel" class="mb-1 block text-sm font-medium text-warm">Ваш телефон</label>
+				<label for="tel" class="mb-1 block text-sm font-medium text-warm">Твій номер телефону</label>
 				<input
 					type="tel"
 					id="tel"
@@ -43,14 +43,14 @@
 			</div>
 
 			<div>
-				<label for="message" class="mb-1 block text-sm font-medium text-warm">Ваше повідомлення</label>
+				<label for="message" class="mb-1 block text-sm font-medium text-warm">Твоє повідомлення повідомлення</label>
 				<textarea
 					id="message"
 					name="message"
 					rows="4"
 					minlength="10"
 					required
-					placeholder="Розкажіть, що вас цікавить чи бентежить (мінімум 10 символів)"
+					placeholder="Розкажи, що тебе цікавить чи бентежить (мінімум 10 символів)"
 					class="w-full rounded-lg border border-warm/20 bg-white px-3 py-2.5 text-warm placeholder:text-warm/40 transition focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30 aria-[invalid]:border-accent-red"
 				></textarea>
 				<p class="field-error mt-1 text-sm text-accent-red" data-error-for="message" hidden></p>
@@ -108,23 +108,23 @@
 
 		const validateName = (): string => {
 			const value = nameInput.value.trim();
-			if (!value) return "Будь ласка, введіть ваше ім'я.";
+			if (!value) return "Будь ласка, введи своє ім'я.";
 			if (value.length < 2) return "Ім'я має містити щонайменше 2 символи.";
 			return "";
 		};
 
 		const validateTel = (): string => {
 			const value = telInput.value.trim();
-			if (!value) return "Будь ласка, введіть номер телефону.";
+			if (!value) return "Будь ласка, введи номер телефону.";
 			if (!/^\+380\d{9}$/.test(value)) {
-				return "Невірний формат. Введіть номер у вигляді +380XXXXXXXXX (12 цифр).";
+				return "Неправильний формат. Введи номер телефону у вигляді +380XXXXXXXXX (12 цифр).";
 			}
 			return "";
 		};
 
 		const validateMessage = (): string => {
 			const value = messageInput.value.trim();
-			if (!value) return "Будь ласка, опишіть ваше запитання.";
+			if (!value) return "Будь ласка, опиши своє запитання/повідомлення.";
 			if (value.length < 10) {
 				return `Повідомлення занадто коротке (мінімум 10 символів, зараз ${value.length}).`;
 			}
@@ -185,7 +185,7 @@
 					headers: { Accept: "application/json" },
 				});
 				if (res.ok) {
-					show("Дякуємо! Ваше повідомлення надіслано. Ми обов'язково дамо вам зворотній зв'язок.", true);
+					show("Дякуємо! Ваше повідомлення надіслано. Ми обов'язково дамо вам зворотний зв'язок.", true);
 					form.reset();
 				} else {
 					show("Не вдалося надіслати. Спробуйте пізніше.", false);
