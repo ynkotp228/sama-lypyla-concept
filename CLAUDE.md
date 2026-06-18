@@ -43,7 +43,8 @@ const base = import.meta.env.BASE_URL;
 ```
 src/
   data/
-    products.ts        # ← единственный источник правды (см. ниже)
+    products.ts        # ← единственный источник правды по товарам/категориям (см. ниже)
+    locations.ts       # точки самовывоза (Point[] + getPointsByCity/getPointById); источник для /locations и <select> чекаута (нед.8)
     nav.ts             # ссылки навигации хедера/футера (использует BASE_URL)
   layouts/
     Layout.astro           # оболочка <html>: SEO/OG-мета, шрифты (@fontsource), Header, <slot/>, Footer, menu.js

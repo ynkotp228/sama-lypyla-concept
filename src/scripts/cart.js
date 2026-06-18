@@ -69,3 +69,42 @@ export function getCartTotal(products) {
     return product ? sum + (product.price * item.quantity) : sum;
   }, 0);
 }
+// ──────────────────────────────────────
+// Order message generation (week 8)
+// ──────────────────────────────────────
+export function generateOrderMessage(cart, products, formData) {
+  const lines = ['Замовлення з сайту Сама Ліпила:', ''];
+  let total = 0;
+
+  for (const item of cart) {
+    const product = products.find(p => p.id === item.id);
+    if (!product) continue;
+    const subtotal = product.price * item.quantity;
+    total += subtotal;
+    lines.push(`• ${product.name} × ${item.quantity} — ${subtotal}₴`);
+  }
+
+  lines.push('', `Разом: ${total}₴`, '');
+  lines.push(`Ім'я: ${formData.name}`);
+  lines.push(`Телефон: ${formData.phone}`);
+  lines.push(`Місто: ${formData.city === 'lviv' ? 'Львів' : 'Вінниця'}`);
+
+  if (formData.method === 'pickup') {
+    lines.push(`Самовивіз: ${formData.pointAddress}`);
+  } else {
+    lines.push(`Доставка: ${formData.deliveryAddress}`);
+  }
+
+  if (formData.comment) lines.push(`Коментар: ${formData.comment}`);
+
+  return lines.join('\n');
+}
+
+export function buildViberLink(phone, message) {
+  const cleanPhone = '+' + phone.replace(/\D/g, '');
+  return `viber://chat?number=${cleanPhone}&text=${encodeURIComponent(message)}`;
+}
+export function buildTelegramLink(username, message) {
+  const cleanUsername = username.replace(/^@/, '');
+  return `https://t.me/${cleanUsername}?text=${encodeURIComponent(message)}`;
+}

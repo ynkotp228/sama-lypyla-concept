@@ -1,51 +1,19 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import PageHeader from '../components/PageHeader.astro';
-
-// Точки продажу. Посилання на Google Maps будуємо програмно —
-// стандартний пошуковий формат ?api=1&query=<адреса>, щоб не хардкодити кожне.
-interface Point {
-  address: string; // як показуємо на картці
-  note?: string;   // орієнтир (ЖК, ТОЦ, район тощо)
-}
-
-const lvivPoints: Point[] = [
-  { address: 'вул. Вигоди, 29', note: 'Левандівка' },
-  { address: 'вул. Порохова, 20А' },
-  { address: 'вул. Городоцька, 86' },
-  { address: 'вул. Малоголосківська, 16' },
-  { address: 'вул. Тичини, 18' },
-];
-
-const vinnytsiaPoints: Point[] = [
-  { address: 'просп. Юності, 21' },
-  { address: 'просп. Юності, 44' },
-  { address: 'вул. Пирогова, 105' },
-  { address: 'вул. Порика, 14' },
-  { address: 'вул. Ак. Янгеля, 12' },
-  { address: 'вул. Князів Коріатовичів, 172' },
-  { address: 'вул. Архітектора Артинова, 6' },
-  { address: 'вул. Ватутіна, 18а' },
-  { address: 'вул. Костя Широцького, 8' },
-  { address: 'вул. Немирівське шосе, 76' },
-  { address: 'вул. Трамвайна, 3', note: 'ЖК Авалон' },
-  { address: 'вул. Келецька, 126а' },
-  { address: 'просп. Коцюбинського, 28' },
-  { address: 'Зупинка Привокзальна', note: 'у бік району Бучмі' },
-  { address: 'вул. Хмельницьке шосе, 114В', note: 'ТОЦ The Mall' },
-  { address: 'вул. Винниченка, 2' },
-  { address: 'вул. Олега Антонова, 40а' },
-  { address: 'вул. Зодчих, 13' },
-];
+import { getPointsByCity, type CityId } from '../data/locations';
 
 // Посилання на Google Maps для конкретної точки (місто + адреса).
 const mapLink = (city: string, address: string) =>
   `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`Сама Ліпила, ${city}, ${address}`)}`;
 
-const cities = [
-  { id: 'lviv', name: 'Львів', points: lvivPoints },
-  { id: 'vinnytsia', name: 'Вінниця', points: vinnytsiaPoints },
-];
+// Міста для показу + їхні точки з даних (src/data/locations.ts). Порядок збережено.
+const cities = (
+  [
+    { id: 'lviv', name: 'Львів' },
+    { id: 'vinnytsia', name: 'Вінниця' },
+  ] satisfies { id: CityId; name: string }[]
+).map((city) => ({ ...city, points: getPointsByCity(city.id) }));
 ---
 
 <Layout title="Локації — Сама Ліпила">
