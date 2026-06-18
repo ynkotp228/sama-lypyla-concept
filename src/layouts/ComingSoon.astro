@@ -16,7 +16,7 @@ const { title } = Astro.props;
         </span>
 
         {title && (
-            <p class="text-sm font-semibold uppercase tracking-wider text-primary">{title}</p>
+            <p class="text-sm font-semibold uppercase tracking-wider text-accent-red">{title}</p>
         )}
         <h1 class="font-display text-3xl font-semibold text-warm md:text-4xl">
             Сторінка в розробці
@@ -30,7 +30,7 @@ const { title } = Astro.props;
 
         <a
             href={base}
-            class="mt-2 inline-flex items-center gap-2 rounded-full bg-primary px-7 py-3 font-medium text-white transition hover:bg-accent-red"
+            class="mt-2 inline-flex items-center gap-2 rounded-full bg-accent-red px-7 py-3 font-medium text-white transition hover:bg-primary"
         >
             <span aria-hidden="true">←</span> Повернутися на головну
         </a>

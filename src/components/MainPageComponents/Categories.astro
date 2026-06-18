@@ -15,13 +15,17 @@ const {
 ---
 
 <section class="mx-auto max-w-6xl px-4 py-16 md:py-24">
-    {showHeader && (
+    {showHeader ? (
         <div class="mb-10 text-center md:mb-14">
             <h2 class="font-display text-3xl font-semibold text-warm md:text-4xl"> {title} </h2>
             {description && (
                 <p class="mx-auto mt-3 max-w-xl text-warm/70">{description}</p>
             )}
         </div>
+    ) : (
+        // Заголовок дає окремий PageHeader (h1), але h3 карток не може йти одразу за h1 —
+        // прихований h2 тримає послідовність заголовків (a11y).
+        <h2 class="sr-only">Категорії напівфабрикатів</h2>
     )}
     <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 md:gap-6 lg:grid-cols-4">
         {

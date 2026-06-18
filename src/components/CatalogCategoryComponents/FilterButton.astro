@@ -15,8 +15,8 @@ const { filter, label, active = false } = Astro.props;
   data-filter={filter}
   class:list={[
     "rounded-full border border-warm/20 px-4 py-1.5 text-sm font-medium text-warm/80 transition-colors",
-    "hover:border-primary hover:text-primary",
-    "[&.is-active]:border-primary [&.is-active]:bg-primary [&.is-active]:text-white",
+    "hover:border-accent-red hover:text-accent-red",
+    "[&.is-active]:border-accent-red [&.is-active]:bg-accent-red [&.is-active]:text-white",
     { "is-active": active },
   ]}
 >

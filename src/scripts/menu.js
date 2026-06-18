@@ -9,7 +9,7 @@ if (toggle && panel) {
   const setOpen = (open) => {
     panel.classList.toggle("is-open", open);
     overlay?.classList.toggle("is-open", open);
-    panel.setAttribute("aria-hidden", String(!open));
+    panel.inert = !open; // знімає панель із Tab-порядку + з дерева доступності коли закрита
     toggle.setAttribute("aria-expanded", String(open));
     document.body.style.overflow = open ? "hidden" : "";
   };

@@ -10,7 +10,7 @@ const base = import.meta.env.BASE_URL;
             <Image src={logo} alt="" width={96} height={96} loading="eager" class="h-full w-full object-contain" />
         </span>
 
-        <p class="font-display text-6xl font-semibold leading-none text-primary md:text-7xl">404</p>
+        <p class="font-display text-6xl font-semibold leading-none text-accent-red md:text-7xl">404</p>
         <h1 class="font-display text-2xl font-semibold text-warm md:text-3xl">Сторінку не знайдено</h1>
         <p class="max-w-md text-warm/70">
             Схоже, такої сторінки не існує або її перенесли. Перевір адресу або повернись на головну.
@@ -19,13 +19,13 @@ const base = import.meta.env.BASE_URL;
         <div class="mt-2 flex flex-col gap-3 sm:flex-row">
             <a
                 href={base}
-                class="inline-flex items-center justify-center rounded-full bg-primary px-7 py-3 font-medium text-white transition hover:bg-accent-red"
+                class="inline-flex items-center justify-center rounded-full bg-accent-red px-7 py-3 font-medium text-white transition hover:bg-primary"
             >
                 На головну
             </a>
             <a
                 href={`${base}catalog/`}
-                class="inline-flex items-center justify-center rounded-full border border-warm/20 px-7 py-3 font-medium text-warm transition hover:border-primary hover:text-primary"
+                class="inline-flex items-center justify-center rounded-full border border-warm/20 px-7 py-3 font-medium text-warm transition hover:border-accent-red hover:text-accent-red"
             >
                 До меню
             </a>

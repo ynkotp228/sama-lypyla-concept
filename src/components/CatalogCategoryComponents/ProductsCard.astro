@@ -59,7 +59,7 @@ const badgeClass: Record<Badge['kind'], string> = {
 
     {product.description && (
       <details class="text-sm text-warm/70">
-        <summary class="cursor-pointer list-none font-medium text-primary transition hover:text-accent-red [&::-webkit-details-marker]:hidden">
+        <summary class="cursor-pointer list-none font-medium text-accent-red transition hover:text-primary [&::-webkit-details-marker]:hidden">
           Детальніше
         </summary>
         <p class="mt-2 leading-relaxed">{product.description}</p>
@@ -70,7 +70,7 @@ const badgeClass: Record<Badge['kind'], string> = {
       type="button"
       data-product-id={product.id}
       aria-label={`Додати ${product.name} в кошик`}
-      class="mt-auto rounded-lg bg-primary px-3 py-2.5 text-sm font-medium text-white transition-colors hover:bg-accent-red"
+      class="mt-auto rounded-lg bg-accent-red px-3 py-2.5 text-sm font-medium text-white transition-colors hover:bg-primary"
     >
       + в кошик
     </button>
