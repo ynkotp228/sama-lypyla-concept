@@ -302,7 +302,12 @@ const phonePattern = '^\\+380\\d{9}$';
     const totalEl = document.getElementById('cart-total')!;
 
     function renderCart() {
-      const cart = getCart();
+      // Лишаємо тільки товари, що реально існують у каталозі:
+      // у localStorage могли застаряти id, видалені/перейменовані в products.ts.
+      // Інакше корзина з самих лише "примарних" товарів сховала б порожній стан.
+      const cart = getCart().filter(
+        (item: { id: string }) => products.some((p) => p.id === item.id),
+      );
 
       if (cart.length === 0) {
         emptyEl.hidden = false;
@@ -316,7 +321,7 @@ const phonePattern = '^\\+380\\d{9}$';
       // Рендер списку
       itemsEl.innerHTML = cart.map((item: { id: string; quantity: number }) => {
         const product = products.find((p) => p.id === item.id);
-        if (!product) return ''; // товар видалений з продукт-каталога
+        if (!product) return ''; // підстраховка (після фільтра не настане)
 
         return `
           <li class="cart-item flex items-center gap-4 rounded-2xl bg-white p-3 shadow-sm ring-1 ring-warm/10 sm:p-4" data-id="${product.id}">
