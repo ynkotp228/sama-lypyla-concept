@@ -468,12 +468,14 @@ const phonePattern = '^\\+380\\d{9}$';
 
         previewEl.textContent = message;
         viberLink.href = buildViberLink('380000000000', message);
-        telegramLink.href = buildTelegramLink('samalipyla_demo', message);
+        telegramLink.href = buildTelegramLink('samalipyla_demo_bot', message);
 
         dialog.dataset.state = 'preview';
         dialogTitle.textContent = 'Ваше замовлення готове';
 
-        copyBtn.focus();
+        // Чекаємо наступний кадр: кнопка щойно перестала бути display:none,
+        // інакше focus() у деяких браузерах не спрацює на ще не відмальованому елементі.
+        requestAnimationFrame(() => copyBtn.focus());
       });
 
       // ─── Скидання форми ───
