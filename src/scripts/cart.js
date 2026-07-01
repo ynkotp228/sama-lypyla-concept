@@ -81,7 +81,7 @@ export function generateOrderMessage(cart, products, formData) {
     if (!product) continue;
     const subtotal = product.price * item.quantity;
     total += subtotal;
-    lines.push(`• ${product.name} × ${item.quantity} — ${subtotal} ₴`);
+    lines.push(`• ${product.name} × ${item.quantity}: ${subtotal} ₴`);
   }
 
   lines.push('', `Разом: ${total} ₴`, '');

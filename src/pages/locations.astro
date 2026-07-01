@@ -14,12 +14,12 @@ const cities = (
     {
       id: 'lviv',
       name: 'Львів',
-      delivery: "У межах об'їзної. Замовлення від 200 ₴. Очікуваний час — до 90 хвилин.",
+      delivery: "У межах об'їзної. Замовлення від 200 ₴. Очікуваний час до 90 хвилин.",
     },
     {
       id: 'vinnytsia',
       name: 'Вінниця',
-      delivery: "Центральні райони: Замостя, Вишенька, Слов'янка. Замовлення від 200 ₴. Очікуваний час — до 90 хвилин.",
+      delivery: "Центральні райони: Замостя, Вишенька, Слов'янка. Замовлення від 200 ₴. Очікуваний час до 90 хвилин.",
     },
   ] satisfies { id: CityId; name: string; delivery: string }[]
 ).map((city) => ({ ...city, points: getPointsByCity(city.id) }));
@@ -33,7 +33,7 @@ const totalPoints = cities.reduce((sum, c) => sum + c.points.length, 0);
 >
   <PageHeader
     title="Локації"
-    description={`${totalPoints} точок самовивозу у Львові та Вінниці. Доставка — у межах основних районів.`}
+    description={`${totalPoints} точок самовивозу у Львові та Вінниці. Доставка у межах основних районів.`}
     secondary="Графік роботи: Щодня з 9:00 до 21:00."
   />
   
