@@ -41,6 +41,9 @@ const base = import.meta.env.BASE_URL;
         </div>
       )}
 
+      <!-- Прихований заголовок секції: групує картки товарів (h3) під категорією (h1),
+           щоб не було пропуску рівня h1→h3 у структурі заголовків. -->
+      <h2 class="sr-only">Товари категорії «{categoryName}»</h2>
       <div class="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {products.map((product, i) => <ProductsCard product={product} priority={i < 3} />)}
       </div>
