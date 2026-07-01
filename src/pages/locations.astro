@@ -7,26 +7,39 @@ import { getPointsByCity, type CityId } from '../data/locations';
 const mapLink = (city: string, address: string) =>
   `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`Сама Ліпила, ${city}, ${address}`)}`;
 
-// Міста для показу + їхні точки з даних (src/data/locations.ts). Порядок збережено.
+// Міста для показу + їхні точки з даних (src/data/locations.ts).
+// Mock-дані про зону доставки — для concept-проєкту. Структура повторюється для обох міст.
 const cities = (
   [
-    { id: 'lviv', name: 'Львів' },
-    { id: 'vinnytsia', name: 'Вінниця' },
-  ] satisfies { id: CityId; name: string }[]
+    {
+      id: 'lviv',
+      name: 'Львів',
+      delivery: "У межах об'їзної. Замовлення від 200 ₴. Очікуваний час — до 90 хвилин.",
+    },
+    {
+      id: 'vinnytsia',
+      name: 'Вінниця',
+      delivery: "Центральні райони: Замостя, Вишенька, Слов'янка. Замовлення від 200 ₴. Очікуваний час — до 90 хвилин.",
+    },
+  ] satisfies { id: CityId; name: string; delivery: string }[]
 ).map((city) => ({ ...city, points: getPointsByCity(city.id) }));
+
+const totalPoints = cities.reduce((sum, c) => sum + c.points.length, 0);
 ---
 
 <Layout title="Локації — Сама Ліпила">
   <PageHeader
     title="Локації"
-    description="5 точок у Львові, 18 — у Вінниці. Обери найближчу та відкрий маршрут у Google Maps."
+    description={`${totalPoints} точок самовивозу у Львові та Вінниці. Доставка — у межах основних районів.`}
+    secondary="Графік роботи: Щодня з 9:00 до 21:00."
   />
+  
 
   <main class="container mx-auto max-w-5xl px-4 py-16 md:py-24">
     {cities.map((city) => (
       <!-- ВАЖЛИВО: id — це якір з тизера локацій на головній (LocationsTeaser) -->
       <section id={city.id} aria-labelledby={`${city.id}-heading`} class="mb-16 scroll-mt-24 last:mb-0">
-        <header class="mb-8 flex items-baseline gap-3">
+        <header class="mb-6 flex items-baseline gap-3">
           <h2 id={`${city.id}-heading`} class="font-display text-3xl font-semibold text-warm md:text-4xl">
             {city.name}
           </h2>
@@ -34,6 +47,23 @@ const cities = (
             {city.points.length} {city.points.length === 1 ? 'точка' : 'точок'}
           </span>
         </header>
+
+        <!-- Інфо-смуга про доставку: перед сіткою точок самовивозу -->
+        <aside
+          aria-labelledby={`${city.id}-delivery-heading`}
+          class="mb-8 flex items-start gap-3 rounded-2xl border border-warm/10 bg-cream-light p-5 md:p-6"
+        >
+          <span aria-hidden="true" class="text-2xl leading-none">🚚</span>
+          <div>
+            <h3 id={`${city.id}-delivery-heading`} class="font-display text-lg font-semibold text-warm">
+              Зона доставки
+            </h3>
+            <p class="mt-1 text-sm text-warm/80 md:text-base">{city.delivery}</p>
+          </div>
+        </aside>
+
+        <!-- Підзаголовок над сіткою — знімає двозначність "що це за картки" -->
+        <h3 class="mb-4 font-display text-xl font-semibold text-warm">Самовивіз</h3>
 
         <ul class="grid grid-cols-1 gap-4 sm:grid-cols-2 md:gap-6 lg:grid-cols-3">
           {city.points.map((point) => (
