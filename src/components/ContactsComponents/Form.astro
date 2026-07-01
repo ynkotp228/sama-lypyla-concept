@@ -12,6 +12,7 @@
 			id="ask-form"
 			action="https://formspree.io/f/mojzpzne"
 			method="POST"
+			novalidate
 			class="mt-6 space-y-4"
 		>
 			<div>
@@ -43,7 +44,7 @@
 			</div>
 
 			<div>
-				<label for="message" class="mb-1 block text-sm font-medium text-warm">Твоє повідомлення повідомлення</label>
+				<label for="message" class="mb-1 block text-sm font-medium text-warm">Твоє повідомлення</label>
 				<textarea
 					id="message"
 					name="message"
@@ -67,7 +68,7 @@
 				id="form-status"
 				role="status"
 				aria-live="polite"
-				class="text-sm font-medium data-[state=error]:text-accent-red data-[state=ok]:text-green-700"
+				class="text-sm font-medium data-[state=error]:text-accent-red data-[state=ok]:text-success"
 				hidden
 			></p>
 		</form>

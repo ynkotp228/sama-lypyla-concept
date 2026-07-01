@@ -12,7 +12,7 @@
 
 - **Astro 6** (`.astro`-компоненты, файловая маршрутизация, `getStaticPaths` для динамических маршрутов).
 - **Tailwind v4** через `@tailwindcss/vite` — конфигурация живёт в CSS (`src/styles/global.css` с `@theme` / `@custom-variant`), **без `tailwind.config.js`**.
-- **Дизайн-токени** в `global.css` `@theme` (палитра брифа): `primary` (#E97817), `accent-red` (#C24A1F, CTA/hover), `deep-blue` (#2B5F8C), `cream` (#FBF6EE, фон), `warm` (#2A1810, текст) → утилиты `bg-/text-/border-`. Базовый слой задаёт кремовый фон + тёплый текст + serif-заголовки.
+- **Дизайн-токени** в `global.css` `@theme` (палитра брифа): `primary` (#E97817), `accent-red` (#C24A1F, CTA/hover), `deep-blue` (#2B5F8C), `cream` (#FBF6EE, фон), `warm` (#2A1810, текст) → утилиты `bg-/text-/border-`. Вне брендовой палитры — служебный `success` (#15803D, green-700) + `success-soft` (#DCFCE7, green-100) для фидбека «успіх» (ОК-форма, `.is-added` в корзине). Базовый слой задаёт кремовый фон + тёплый текст + serif-заголовки. **Используй только эти токены — любой `bg-*/text-*` с именем, которого нет в `@theme`, молча даст пустой класс** (так был баг `bg-cream-light`).
 - **Шрифты**: `font-display` = Lora (заголовки), `font-sans` = Inter (тело). Self-hosted через `@fontsource/lora` + `@fontsource/inter` (импорты весов в `Layout.astro`), **без Google Fonts CDN**.
 - **TypeScript**, `astro/tsconfigs/strict`.
 - Интеграция `@astrojs/sitemap`.
@@ -43,30 +43,41 @@ const base = import.meta.env.BASE_URL;
 ```
 src/
   data/
-    products.ts        # ← единственный источник правды по товарам/категориям (см. ниже)
-    locations.ts       # точки самовывоза (Point[] + getPointsByCity/getPointById); источник для /locations и <select> чекаута (нед.8)
-    nav.ts             # ссылки навигации хедера/футера (использует BASE_URL)
+    products.ts        # ← единственный источник правды по товарам/категориям (8 кат., 52 товара; см. ниже)
+    locations.ts       # 23 точки самовывоза (5 Львов + 18 Винница): Point[] + getPointsByCity/getPointById.
+                       #   Один источник и для /locations, и для <select> в чекауте корзины.
+    nav.ts             # 6 ссылок хедера (Desktop.Nav читает отсюда); использует BASE_URL. Footer линкует руками.
   layouts/
-    Layout.astro           # оболочка <html>: SEO/OG-мета, шрифты (@fontsource), Header, <slot/>, Footer, menu.js
+    Layout.astro           # оболочка <html>: SEO/OG-мета (noindex!), шрифты (@fontsource), Header, <slot/>, Footer;
+                           #   в конце <body> импортит ОБА скрипта: menu.js + cart.js
     ComingSoon.astro       # «сторінка в розробці»: лого + заголовок + <slot/> + CTA; проп title
   pages/
-    index.astro              # главная = композиция из MainPageComponents
-    catalog/[category].astro # динамика: 8 страниц категорий через getStaticPaths + фильтры по тегам
-    catalog/index.astro      # лендинг каталога — PageHeader + Categories(showHeader=false) + Popular
-    about|cart|contacts|locations|privacy|wholesale.astro  # заглушки на ComingSoon (с title); contacts ещё рендерит Form
+    index.astro              # главная = композиция из MainPageComponents (порядок см. ниже)
+    catalog/index.astro      # лендинг «Меню» — PageHeader + Categories(showHeader=false) + Popular
+    catalog/[category].astro # динамика: 8 страниц категорий через getStaticPaths + client-фильтры по тегам
+    cart.astro               # ✅ РЕАЛЬНАЯ страница: корзина + <dialog> оформления заказа (data-state form/preview)
+    locations.astro          # ✅ РЕАЛЬНАЯ: города из locations.ts, зоны доставки (mock) + точки → Google Maps
+    contacts.astro           # ✅ РЕАЛЬНАЯ: PageHeader + ContactsBlock + SocialMedia + Form (2 колонки)
+    about|privacy|wholesale.astro  # 🚧 заглушки на ComingSoon (с title). ЕДИНСТВЕННЫЕ оставшиеся заглушки.
     404.astro, robots.txt.ts
   components/
-    PageHeader.astro   # mini-hero для внутренних страниц (заголовок + описание); сейчас на /catalog
-    LayoutComponents/  Header (лого+назва, nav, иконка корзины со счётчиком #cart-count), Footer
+    PageHeader.astro   # mini-hero внутренних страниц (title + description + опц. secondary); на /catalog, /contacts, /cart, /locations
+    LayoutComponents/  Header (лого+назва, Desktop.Nav, иконка корзины со счётчиком #cart-count), Footer (4 колонки)
     Menu/              BurgerButton, BurgerPanel, Desktop.Nav  (мобильный drawer + десктоп-навигация)
     MainPageComponents/ Hero, Categories(+CategoriesItems; проп showHeader), USP, Popular(+ProductCard),
-                        HowToMakeOrder, Reviews, B2BTeaser, LocationsTeaser, About
-    CatalogCategoryComponents/ ProductsCard (бейджи + <details>), FilterButton
-    Form.astro
-  scripts/  menu.js (открытие/закрытие drawer), cart.js (заглушка)
-  assets/images/  products-ready/<category>/*.jpg, MainPageImages/categories/*.webp, logoSL.png
+                        HowToMakeOrder, Reviews, B2BTeaser, LocationsTeaser, About(⚠ НЕ подключён к index.astro)
+    CatalogCategoryComponents/ ProductsCard (бейджи + <details> + кнопка «+ в кошик»), FilterButton
+    ContactsComponents/ Form, ContactsBlock, SocialMedia
+  scripts/  menu.js (drawer), cart.js (✅ полная логика корзины: localStorage + событие cart-updated + генерация заказа)
+  assets/images/  products-ready/<category>/*.jpg, MainPageImages/(categories|USPimages)/*.webp, HeroMainPage.webp, b2b.webp, logoSL.png
 public/   фавиконки
 ```
+
+**Две разные карточки товара** (не путать):
+- `CatalogCategoryComponents/ProductsCard.astro` — на страницах категорий. Полная: до 2 бейджей, `<details>`, кнопка «+ в кошик» (`data-product-id`).
+- `MainPageComponents/ProductCard.astro` — в блоке Popular (главная + `/catalog/`). Тизер: ведёт на страницу категории (`/catalog/<slug>/`), только бейдж «Хіт», БЕЗ кнопки корзины и `<details>`.
+
+**Порядок секций главной** (`index.astro`): Hero → Categories(title="Меню") → USP(#USP) → Popular → HowToMakeOrder → Reviews → B2BTeaser → LocationsTeaser.
 
 ## Слой данных — `src/data/products.ts`
 
@@ -85,14 +96,19 @@ public/   фавиконки
 - **Мобильное меню** — `menu.js` переключает `is-open` на `#sidebar`/`#sidebar-overlay`; `is-open` — это Tailwind `@custom-variant`, объявленный в `global.css`. Закрывается по Esc / клику по оверлею / клику по ссылке.
 - Брейкпоинты сетки по всему проекту: `grid-cols-1 sm:grid-cols-2 lg:grid-cols-3` (каталог) / `lg:grid-cols-4` (главная). Акцентный цвет — токен `primary` (оранжевый бренда), hover/CTA — `accent-red`. Используй токены палитры (`primary/accent-red/deep-blue/cream/warm`), а **не** дефолтные `orange-*/gray-*`.
 - **Бейджи на карточке товара** (`CatalogCategoryComponents/ProductsCard.astro`): максимум 2, приоритет Хіт (`isHit`) → Новинка (`isNew`) → первый тег из `tags[]`. Описание товара — в `<details>` «Детальніше».
-- **Внутренние страницы**: общий мини-герой `PageHeader` (title + description). «В розробці» — лейаут `ComingSoon` (проп `title`, есть `<slot/>` для доп. контента вроде `Form`). Компонент `Categories` принимает `showHeader={false}`, когда заголовок даёт `PageHeader` (чтобы не было двух «Меню»).
+- **Внутренние страницы**: общий мини-герой `PageHeader` (title + description). «В розробці» — лейаут `ComingSoon` (проп `title`, есть `<slot/>`). Компонент `Categories` принимает `showHeader={false}`, когда заголовок даёт `PageHeader` (чтобы не было двух «Меню»).
+- **Корзина** (`scripts/cart.js`) — vanilla-модуль, состояние в `localStorage` (ключ `sama-lipyla-cart`, массив `{id, quantity}[]`). Экспорты: `getCart / addToCart / removeFromCart / updateQuantity / getCartCount / getCartTotal(products) / generateOrderMessage(cart, products, formData) / buildViberLink / buildTelegramLink`. Любая мутация диспатчит `window` CustomEvent **`cart-updated`** — его слушают счётчик в Header и рендер `/cart`. Кросс-таб синк — через нативное `storage`-событие. `addToCart` вызывается делегированным листенером на `document` из `ProductsCard.astro` (по `data-product-id`), с временным фидбеком `.is-added` (1.2с).
+- **Чекаут** (`cart.astro`) — нативный `<dialog>` с двумя состояниями через `data-state` (`form` / `preview`, переключаются CSS'ом → прогрессивное улучшение). Форма: контакты + способ (самовывоз/доставка) + город → `<select>` точек из `locations.ts`; submit НЕ отправляет никуда, а генерит текст заказа + ссылки Viber/Telegram (это концепт-демо). Escape перехватывается внутри диалога, чтобы не всплыть в `menu.js`.
 - **Tailwind v4 — канонические утилиты**: градиенты `bg-linear-to-*` (не `bg-gradient-to-*`), data-варианты `data-[state=...]:` (не `[&[data-state=...]]:`).
 
-## Текущее состояние (на неделю 7)
+## Текущее состояние
 
-- **Готово**: модель данных; вся вёрстка/стилизация по брифу (палитра + Lora/Inter) — главная и её секции, лендинг каталога, страницы категорий (фильтры + бейджи + `<details>`), `ComingSoon`, `404`, форма контактов. Header по IA (+ иконка корзины), Footer оформлен.
-- **Заглушки**: `about/cart/contacts/locations/privacy/wholesale.astro` теперь рендерят оформленный `ComingSoon` (не пустые; `contacts` показывает `Form`). `scripts/cart.js` всё ещё пустой — логика корзины (добавление по `data-product-id`, счётчик `#cart-count`, `localStorage`, страница `/cart`) не реализована.
-- **Дальше**: корзина (`cart.js`), контент `/locations` (адреса + зоны доставки), `/about` и `/wholesale` (неделя 9).
+Актуально; подробная карта страниц/секций — в `concept-plan-info/site-arhitecrure.md` (v4).
+
+- **Готово**: модель данных; вся вёрстка по брифу (палитра + Lora/Inter). Главная (8 секций), лендинг `/catalog/`, 8 страниц категорий (client-фильтры + бейджи + `<details>`), `404`.
+- **Полностью рабочие страницы** (уже НЕ заглушки): **`/cart/`** — корзина + чекаут-диалог (`cart.js` реализован целиком); **`/locations/`** — точки из `locations.ts` + зоны доставки + Google Maps; **`/contacts/`** — контакты + соцсети + форма.
+- **Оставшиеся заглушки** (`ComingSoon`): **`/about/`**, **`/wholesale/`**, **`/privacy/`**.
+- **Дальше**: контент `/about` и `/wholesale` (неделя 9), текст `/privacy`. Опционально: подключить или удалить неиспользуемый `MainPageComponents/About.astro`.
 
 ## Заметки по работе здесь
 
