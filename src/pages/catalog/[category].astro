@@ -19,28 +19,30 @@ const { categoryName, products, tags } = Astro.props;
 const base = import.meta.env.BASE_URL;
 ---
 <Layout title={`${categoryName} — Сама Ліпила`}>
-  <section class="mx-auto max-w-6xl px-4 py-10 md:py-14">
-    <a
-      href={`${base}catalog/`}
-      class="inline-flex items-center gap-1.5 text-sm font-medium text-warm/60 transition hover:text-primary"
-    >
-      <span aria-hidden="true">←</span> Усе меню
-    </a>
+  <main>
+    <section class="mx-auto max-w-6xl px-4 py-10 md:py-14">
+      <a
+        href={`${base}catalog/`}
+        class="inline-flex items-center gap-1.5 text-sm font-medium text-warm/60 transition hover:text-primary"
+      >
+        <span aria-hidden="true">←</span> Усе меню
+      </a>
 
-    <h1 class="mt-3 font-display text-3xl font-semibold text-warm sm:text-4xl">{categoryName}</h1>
-    <p class="mt-1 text-warm/60">{products.length} позицій</p>
+      <h1 class="mt-3 font-display text-3xl font-semibold text-warm sm:text-4xl">{categoryName}</h1>
+      <p class="mt-1 text-warm/60">{products.length} позицій</p>
 
-    {tags.length > 0 && (
-      <div class="mt-6 flex flex-wrap gap-2">
-        <FilterButton filter="all" label="Усі" active />
-        {tags.map(tag => <FilterButton filter={tag} label={tagLabels[tag]} />)}
+      {tags.length > 0 && (
+        <div class="mt-6 flex flex-wrap gap-2">
+          <FilterButton filter="all" label="Усі" active />
+          {tags.map(tag => <FilterButton filter={tag} label={tagLabels[tag]} />)}
+        </div>
+      )}
+
+      <div class="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        {products.map((product, i) => <ProductsCard product={product} priority={i < 3} />)}
       </div>
-    )}
-
-    <div class="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-      {products.map((product, i) => <ProductsCard product={product} priority={i < 3} />)}
-    </div>
-  </section>
+    </section>
+  </main>
 
   <script>
     // 1. Усі кнопки фільтра і всі карточки.

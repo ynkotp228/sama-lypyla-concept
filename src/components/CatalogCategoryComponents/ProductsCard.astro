@@ -79,17 +79,40 @@ const badgeClass: Record<Badge['kind'], string> = {
     </button>
   </div>
 </article>
+
+<style>
+  /* Стан "додано в кошик": зелений — універсальний колір успіху.
+     Навмисно поза брендовою палітрою, тільки на час фідбеку (1.2с),
+     перекриває червоний фон і hover кнопки. */
+  .is-added,
+  .is-added:hover {
+    background-color: #dcfce7; /* green-100 */
+    color: #15803d;           /* green-700, текст + галочка */
+  }
+</style>
+
 <script>
   import { addToCart } from "../../scripts/cart";
    document.addEventListener('click', (e) => {
     const target = e.target as HTMLElement;
-    const btn = target.closest('button[data-product-id]');
+    // Своє поле _feedbackTimeout зберігає id таймера на самому елементі —
+    // розширюємо тип, щоб strict TS про нього знав.
+    const btn = target.closest('button[data-product-id]') as
+      | (HTMLButtonElement & { _feedbackTimeout?: ReturnType<typeof setTimeout> })
+      | null;
     if (!btn) return;
 
     const productId = btn.getAttribute('data-product-id');
     if (productId) {
       addToCart(productId);
-      // TODO: візуальний фідбек (опціонально) — наприклад, кнопка моргне зеленим
+      clearTimeout(btn._feedbackTimeout);
+      btn.classList.add('is-added');
+      btn.textContent = 'Додано ✓';
+
+      btn._feedbackTimeout = setTimeout(() => {
+      btn.classList.remove('is-added');
+      btn.textContent = '+ в кошик';
+      }, 1200);
     }
   });
 </script>
