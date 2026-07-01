@@ -23,6 +23,7 @@ const url = `${base}catalog/${product.category}/`;
             widths={[280, 350, 600]}
             sizes="(min-width: 1024px) 280px, (min-width: 640px) 45vw, 100vw"
             formats={['avif', 'webp']}
+            fallbackFormat="webp"
             loading="lazy"
             class="[&_img]:aspect-4/3 [&_img]:w-full [&_img]:object-cover [&_img]:transition-transform [&_img]:duration-500 group-hover:[&_img]:scale-105"
         />

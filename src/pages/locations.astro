@@ -27,7 +27,10 @@ const cities = (
 const totalPoints = cities.reduce((sum, c) => sum + c.points.length, 0);
 ---
 
-<Layout title="Локації — Сама Ліпила">
+<Layout
+  title="Локації — Сама Ліпила"
+  description={`${totalPoints} точок самовивозу у Львові та Вінниці та зони доставки «Сама Ліпила». Дивись адреси на мапі.`}
+>
   <PageHeader
     title="Локації"
     description={`${totalPoints} точок самовивозу у Львові та Вінниці. Доставка — у межах основних районів.`}
@@ -84,7 +87,7 @@ const totalPoints = cities.reduce((sum, c) => sum + c.points.length, 0);
                     )}
                   </address>
                 </div>
-                <span class="inline-flex items-center gap-1.5 text-sm font-medium text-accent-red transition group-hover:text-primary">
+                <span class="inline-flex items-center gap-1.5 text-sm font-medium text-accent-red transition group-hover:underline">
                   Відкрити в Картах
                   <span class="transition group-hover:translate-x-1" aria-hidden="true">→</span>
                 </span>

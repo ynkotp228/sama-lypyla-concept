@@ -12,7 +12,8 @@
 
 - **Astro 6** (`.astro`-компоненты, файловая маршрутизация, `getStaticPaths` для динамических маршрутов).
 - **Tailwind v4** через `@tailwindcss/vite` — конфигурация живёт в CSS (`src/styles/global.css` с `@theme` / `@custom-variant`), **без `tailwind.config.js`**.
-- **Дизайн-токени** в `global.css` `@theme` (палитра брифа): `primary` (#E97817), `accent-red` (#C24A1F, CTA/hover), `deep-blue` (#2B5F8C), `cream` (#FBF6EE, фон), `warm` (#2A1810, текст) → утилиты `bg-/text-/border-`. Вне брендовой палитры — служебный `success` (#15803D, green-700) + `success-soft` (#DCFCE7, green-100) для фидбека «успіх» (ОК-форма, `.is-added` в корзине). Базовый слой задаёт кремовый фон + тёплый текст + serif-заголовки. **Используй только эти токены — любой `bg-*/text-*` с именем, которого нет в `@theme`, молча даст пустой класс** (так был баг `bg-cream-light`).
+- **Дизайн-токени** в `global.css` `@theme` (палитра брифа): `primary` (#E97817), `accent-red` (#C24A1F, CTA/hover), `accent-red-hover` (#A23C17, тёмный hover сплошных кнопок), `deep-blue` (#2B5F8C), `cream` (#FBF6EE, фон), `warm` (#2A1810, текст) → утилиты `bg-/text-/border-`. Вне брендовой палитры — служебный `success` (#15803D, green-700) + `success-soft` (#DCFCE7, green-100) для фидбека «успіх» (ОК-форма, `.is-added` в корзине). Базовый слой задаёт кремовый фон + тёплый текст + serif-заголовки. **Используй только эти токены — любой `bg-*/text-*` с именем, которого нет в `@theme`, молча даст пустой класс** (так был баг `bg-cream-light`).
+- ⚠️ **Контраст (WCAG AA).** `primary` (#E97817) на светлом даёт лишь ~2.9:1 → **только декор**: заливки/тінти (`bg-primary/10`), бордеры, градиенты, `accent-color` радио. Для **текста/иконок/ссылок** и белого текста на заливке используй `accent-red` (4.9:1). Hover сплошных кнопок (`bg-accent-red text-white`) → `hover:bg-accent-red-hover` (не `hover:bg-primary` — белое на оранжевом ~2.9:1). Фокус-обводка и `focus:border/ring` в формах — тоже `accent-red`. Ссылка, у которой default уже `accent-red`, даёт hover-фидбек через `hover:underline`, а не сменой цвета.
 - **Шрифты**: `font-display` = Lora (заголовки), `font-sans` = Inter (тело). Self-hosted через `@fontsource/lora` + `@fontsource/inter` (импорты весов в `Layout.astro`), **без Google Fonts CDN**.
 - **TypeScript**, `astro/tsconfigs/strict`.
 - Интеграция `@astrojs/sitemap`.
@@ -65,7 +66,7 @@ src/
     LayoutComponents/  Header (лого+назва, Desktop.Nav, иконка корзины со счётчиком #cart-count), Footer (4 колонки)
     Menu/              BurgerButton, BurgerPanel, Desktop.Nav  (мобильный drawer + десктоп-навигация)
     MainPageComponents/ Hero, Categories(+CategoriesItems; проп showHeader), USP, Popular(+ProductCard),
-                        HowToMakeOrder, Reviews, B2BTeaser, LocationsTeaser, About(⚠ НЕ подключён к index.astro)
+                        HowToMakeOrder, Reviews, B2BTeaser, LocationsTeaser
     CatalogCategoryComponents/ ProductsCard (бейджи + <details> + кнопка «+ в кошик»), FilterButton
     ContactsComponents/ Form, ContactsBlock, SocialMedia
   scripts/  menu.js (drawer), cart.js (✅ полная логика корзины: localStorage + событие cart-updated + генерация заказа)
@@ -91,13 +92,14 @@ public/   фавиконки
 
 ## Соглашения / паттерны
 
-- **`<Picture>`** (`astro:assets`) для адаптивных карточек каталога: `widths={[280,350,600]}` + `sizes` под брейкпоинты сетки + `formats={['avif','webp']}`. **`<Image>`** для ассетов фиксированного размера (логотип). Стилизуй внутренний `<img>` через произвольный селектор Tailwind `[&_img]:...`.
+- **`<Picture>`** (`astro:assets`) для адаптивных карточек каталога: `widths={[280,350,600]}` + `sizes` под брейкпоинты сетки + `formats={['avif','webp']}` + **`fallbackFormat="webp"`**. ⚠️ Без `fallbackFormat` Astro генерит `<img>`-фолбэк в **PNG** (по умолчанию), раздувая dist на мегабайты (hero был 1.7 МБ, b2b 2.9 МБ) — всегда ставь `fallbackFormat="webp"`. **`<Image>`** для ассетов фиксированного размера (логотип). Стилизуй внутренний `<img>` через произвольный селектор Tailwind `[&_img]:...`.
 - **Фильтры категорий** (каталог) — на стороне клиента, без фреймворка: карточки получают `class="product-card"` + `data-tags="tag1 tag2"`; кнопки получают `data-filter`; инлайновый `<script>` переключает `hidden` и `is-active`. Взаимоисключающие (как радио) + сброс «Усі». См. `pages/catalog/[category].astro` и `CatalogCategoryComponents/`.
 - **Мобильное меню** — `menu.js` переключает `is-open` на `#sidebar`/`#sidebar-overlay`; `is-open` — это Tailwind `@custom-variant`, объявленный в `global.css`. Закрывается по Esc / клику по оверлею / клику по ссылке.
-- Брейкпоинты сетки по всему проекту: `grid-cols-1 sm:grid-cols-2 lg:grid-cols-3` (каталог) / `lg:grid-cols-4` (главная). Акцентный цвет — токен `primary` (оранжевый бренда), hover/CTA — `accent-red`. Используй токены палитры (`primary/accent-red/deep-blue/cream/warm`), а **не** дефолтные `orange-*/gray-*`.
+- Брейкпоинты сетки по всему проекту: `grid-cols-1 sm:grid-cols-2 lg:grid-cols-3` (каталог) / `lg:grid-cols-4` (главная). Цвета — только токены палитры (`primary/accent-red/deep-blue/cream/warm`), а **не** дефолтные `orange-*/gray-*`; распределение `primary` (декор) vs `accent-red` (текст/CTA/hover) — см. пункт про контраст выше.
 - **Бейджи на карточке товара** (`CatalogCategoryComponents/ProductsCard.astro`): максимум 2, приоритет Хіт (`isHit`) → Новинка (`isNew`) → первый тег из `tags[]`. Описание товара — в `<details>` «Детальніше».
 - **Внутренние страницы**: общий мини-герой `PageHeader` (title + description). «В розробці» — лейаут `ComingSoon` (проп `title`, есть `<slot/>`). Компонент `Categories` принимает `showHeader={false}`, когда заголовок даёт `PageHeader` (чтобы не было двух «Меню»).
 - **Корзина** (`scripts/cart.js`) — vanilla-модуль, состояние в `localStorage` (ключ `sama-lipyla-cart`, массив `{id, quantity}[]`). Экспорты: `getCart / addToCart / removeFromCart / updateQuantity / getCartCount / getCartTotal(products) / generateOrderMessage(cart, products, formData) / buildViberLink / buildTelegramLink`. Любая мутация диспатчит `window` CustomEvent **`cart-updated`** — его слушают счётчик в Header и рендер `/cart`. Кросс-таб синк — через нативное `storage`-событие. `addToCart` вызывается делегированным листенером на `document` из `ProductsCard.astro` (по `data-product-id`), с временным фидбеком `.is-added` (1.2с).
+- **Рендер списка `/cart`** — клиентский JS. Данные товаров приходят НЕ импортом `products` в клиентский `<script>` (это притащило бы в бандл ESM-импорты оригиналов картинок, до ~264 КБ), а готовым JSON `#cart-products` (`<script type="application/json">`), собранным во frontmatter `cart.astro`: только нужные поля + webp-мініатюра ~200px через `getImage()` (≈8 КБ). При добавлении поля в карточку кошика — расширяй и `cartProducts`, и тип `CartProduct` в клиентском скрипте.
 - **Чекаут** (`cart.astro`) — нативный `<dialog>` с двумя состояниями через `data-state` (`form` / `preview`, переключаются CSS'ом → прогрессивное улучшение). Форма: контакты + способ (самовывоз/доставка) + город → `<select>` точек из `locations.ts`; submit НЕ отправляет никуда, а генерит текст заказа + ссылки Viber/Telegram (это концепт-демо). Escape перехватывается внутри диалога, чтобы не всплыть в `menu.js`.
 - **Tailwind v4 — канонические утилиты**: градиенты `bg-linear-to-*` (не `bg-gradient-to-*`), data-варианты `data-[state=...]:` (не `[&[data-state=...]]:`).
 
@@ -108,7 +110,7 @@ public/   фавиконки
 - **Готово**: модель данных; вся вёрстка по брифу (палитра + Lora/Inter). Главная (8 секций), лендинг `/catalog/`, 8 страниц категорий (client-фильтры + бейджи + `<details>`), `404`.
 - **Полностью рабочие страницы** (уже НЕ заглушки): **`/cart/`** — корзина + чекаут-диалог (`cart.js` реализован целиком); **`/locations/`** — точки из `locations.ts` + зоны доставки + Google Maps; **`/contacts/`** — контакты + соцсети + форма.
 - **Оставшиеся заглушки** (`ComingSoon`): **`/about/`**, **`/wholesale/`**, **`/privacy/`**.
-- **Дальше**: контент `/about` и `/wholesale` (неделя 9), текст `/privacy`. Опционально: подключить или удалить неиспользуемый `MainPageComponents/About.astro`.
+- **Дальше**: контент `/about` и `/wholesale` (неделя 9), текст `/privacy`.
 
 ## Заметки по работе здесь
 

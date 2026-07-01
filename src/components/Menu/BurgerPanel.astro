@@ -25,7 +25,7 @@ import { links } from '../../data/nav.ts';
 			type="button"
 			id="sidebar-close"
 			aria-label="Закрити меню"
-			class="inline-flex h-9 w-9 items-center justify-center rounded-full transition hover:bg-warm/5 hover:text-primary"
+			class="inline-flex h-9 w-9 items-center justify-center rounded-full transition hover:bg-warm/5 hover:text-accent-red"
 		>
 			<svg
 				xmlns="http://www.w3.org/2000/svg"
@@ -50,7 +50,7 @@ import { links } from '../../data/nav.ts';
 		links.map(link => (
 			<a
 				href={link.href}
-				class="block rounded-lg px-3 py-2.5 transition hover:bg-primary/10 hover:text-primary"
+				class="block rounded-lg px-3 py-2.5 transition hover:bg-primary/10 hover:text-accent-red"
 			>
 				{link.name}
 			</a>

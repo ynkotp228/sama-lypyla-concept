@@ -21,6 +21,7 @@ const url = `${base}catalog/${category.slug}/`;
         widths={[200, 300, 420]}
         sizes="(min-width: 1024px) 280px, (min-width: 640px) 45vw, 100vw"
         formats={['avif', 'webp']}
+        fallbackFormat="webp"
         class="[&_img]:aspect-square [&_img]:h-full [&_img]:w-full [&_img]:object-cover [&_img]:transition-transform [&_img]:duration-500 group-hover:[&_img]:scale-105"
     />
     <!-- Затемнення знизу під підпис -->

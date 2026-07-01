@@ -5,8 +5,9 @@
    Палітра та шрифти живуть тут (Tailwind v4, без tailwind.config.js).
    Кольори → утиліти: bg-primary, text-warm, border-cream, bg-deep-blue ... */
 @theme {
-  --color-primary: #e97817; /* основний теплий помаранчевий бренду */
-  --color-accent-red: #c24a1f; /* CTA / акценти / апетит (та hover для primary) */
+  --color-primary: #e97817; /* основний теплий помаранчевий бренду — ТІЛЬКИ декор: заливки/тінти/бордери/градієнти (на світлому дає лише ~2.9:1, не для тексту) */
+  --color-accent-red: #c24a1f; /* CTA / акценти / текст-лінки на світлому (4.9:1, проходить WCAG AA) */
+  --color-accent-red-hover: #a23c17; /* темніший варіант accent-red — hover суцільних кнопок (білий текст ≥6:1) */
   --color-deep-blue: #2b5f8c; /* вторинний з лого — довіра */
   --color-cream: #fbf6ee; /* фон — асоціація з папером меню */
   --color-warm: #2a1810; /* основний текст — теплий коричневий */
@@ -44,7 +45,7 @@
 
   /* Видимий фокус для клавіатурної навігації (a11y). */
   :focus-visible {
-    outline: 2px solid var(--color-primary);
+    outline: 2px solid var(--color-accent-red); /* accent-red дає ≥3:1 на кремовому/білому (primary — ні) */
     outline-offset: 2px;
   }
 }

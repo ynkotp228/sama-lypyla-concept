@@ -38,6 +38,7 @@ const badgeClass: Record<Badge['kind'], string> = {
       widths={[280, 350, 600]}
       sizes="(min-width: 1024px) 280px, (min-width: 640px) 45vw, 100vw"
       formats={['avif', 'webp']}
+      fallbackFormat="webp"
       alt={product.alt}
       loading={priority ? 'eager' : 'lazy'}
       fetchpriority={priority ? 'high' : 'auto'}
@@ -62,7 +63,7 @@ const badgeClass: Record<Badge['kind'], string> = {
 
     {product.description && (
       <details class="text-sm text-warm/70">
-        <summary class="cursor-pointer list-none font-medium text-accent-red transition hover:text-primary [&::-webkit-details-marker]:hidden">
+        <summary class="cursor-pointer list-none font-medium text-accent-red transition hover:underline [&::-webkit-details-marker]:hidden">
           Детальніше
         </summary>
         <p class="mt-2 leading-relaxed">{product.description}</p>
@@ -73,7 +74,7 @@ const badgeClass: Record<Badge['kind'], string> = {
       type="button"
       data-product-id={product.id}
       aria-label={`Додати ${product.name} в кошик`}
-      class="mt-auto rounded-lg bg-accent-red px-3 py-2.5 text-sm font-medium text-white transition-colors hover:bg-primary"
+      class="mt-auto rounded-lg bg-accent-red px-3 py-2.5 text-sm font-medium text-white transition-colors hover:bg-accent-red-hover"
     >
       + в кошик
     </button>

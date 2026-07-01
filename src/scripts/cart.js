@@ -81,10 +81,10 @@ export function generateOrderMessage(cart, products, formData) {
     if (!product) continue;
     const subtotal = product.price * item.quantity;
     total += subtotal;
-    lines.push(`• ${product.name} × ${item.quantity} — ${subtotal}₴`);
+    lines.push(`• ${product.name} × ${item.quantity} — ${subtotal} ₴`);
   }
 
-  lines.push('', `Разом: ${total}₴`, '');
+  lines.push('', `Разом: ${total} ₴`, '');
   lines.push(`Ім'я: ${formData.name}`);
   lines.push(`Телефон: ${formData.phone}`);
   lines.push(`Місто: ${formData.city === 'lviv' ? 'Львів' : 'Вінниця'}`);
