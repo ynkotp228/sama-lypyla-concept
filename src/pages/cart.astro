@@ -282,9 +282,6 @@ const cartProducts = await Promise.all(
   </main>
 
   <style>
-    /* Прогресивне покращення: якщо JS не завантажився, користувач
-       побачить хоча б форму. JS перемикає data-state. */
-
     /* state=form: ховаємо preview */
     #checkout-dialog[data-state="form"] .checkout-preview-state {
       display: none;
@@ -497,7 +494,7 @@ const cartProducts = await Promise.all(
 
         previewEl.textContent = message;
         viberLink.href = buildViberLink('380000000000', message);
-        telegramLink.href = buildTelegramLink('samalipyla_demo_bot', message);
+        telegramLink.href = buildTelegramLink('samalipyla_demo', message);
 
         dialog.dataset.state = 'preview';
         dialogTitle.textContent = 'Ваше замовлення готове';
