@@ -16,7 +16,8 @@
 - ⚠️ **Контраст (WCAG AA).** `primary` (#E97817) на светлом даёт лишь ~2.9:1 → **только декор**: заливки/тінти (`bg-primary/10`), бордеры, градиенты, `accent-color` радио. Для **текста/иконок/ссылок** и белого текста на заливке используй `accent-red` (4.9:1). Hover сплошных кнопок (`bg-accent-red text-white`) → `hover:bg-accent-red-hover` (не `hover:bg-primary` — белое на оранжевом ~2.9:1). Фокус-обводка и `focus:border/ring` в формах — тоже `accent-red`. Ссылка, у которой default уже `accent-red`, даёт hover-фидбек через `hover:underline`, а не сменой цвета.
 - **Шрифты**: `font-display` = Lora (заголовки), `font-sans` = Inter (тело). Self-hosted через `@fontsource/lora` + `@fontsource/inter` (импорты весов в `Layout.astro`), **без Google Fonts CDN**.
 - **TypeScript**, `astro/tsconfigs/strict`.
-- Интеграция `@astrojs/sitemap`.
+- Интеграции: `@astrojs/sitemap` + `astro-icon` (иконки Lucide из набора `@iconify-json/lucide`).
+- **Иконки** — `astro-icon`: `import { Icon } from "astro-icon/components"` → `<Icon name="lucide:hand" class="h-5 w-5" aria-hidden="true" />`. Рендерятся инлайн-SVG со `stroke="currentColor"`, так что цвет задаётся через `text-*` на самой иконке или родителе (используем `accent-red`; размер — Tailwind `h-*/w-*`). Декоративные → `aria-hidden`. **Не все имена из lucide.dev есть в наборе** (напр. `snowflake-off` отсутствует — проверяй `@iconify-json/lucide/icons.json`). Раньше в проекте иконок не было (был emoji `🚚`); теперь единый паттерн — Lucide.
 
 ```
 npm run dev      # localhost:4321
@@ -59,7 +60,8 @@ src/
     cart.astro               # ✅ РЕАЛЬНАЯ страница: корзина + <dialog> оформления заказа (data-state form/preview)
     locations.astro          # ✅ РЕАЛЬНАЯ: города из locations.ts, зоны доставки (mock) + точки → Google Maps
     contacts.astro           # ✅ РЕАЛЬНАЯ: PageHeader + ContactsBlock + SocialMedia + Form (2 колонки)
-    about|privacy|wholesale.astro  # 🚧 заглушки на ComingSoon (с title). ЕДИНСТВЕННЫЕ оставшиеся заглушки.
+    about.astro              # ✅ РЕАЛЬНАЯ: PageHeader + 3 секции (принципы-checklist / контраст-card / локальность+CTA→/locations)
+    privacy|wholesale.astro  # 🚧 заглушки на ComingSoon (с title). ЕДИНСТВЕННЫЕ оставшиеся заглушки.
     404.astro, robots.txt.ts
   components/
     PageHeader.astro   # mini-hero внутренних страниц (title + description + опц. secondary); на /catalog, /contacts, /cart, /locations
@@ -108,9 +110,9 @@ public/   фавиконки
 Актуально; подробная карта страниц/секций — в `concept-plan-info/site-arhitecrure.md` (v4).
 
 - **Готово**: модель данных; вся вёрстка по брифу (палитра + Lora/Inter). Главная (8 секций), лендинг `/catalog/`, 8 страниц категорий (client-фильтры + бейджи + `<details>`), `404`.
-- **Полностью рабочие страницы** (уже НЕ заглушки): **`/cart/`** — корзина + чекаут-диалог (`cart.js` реализован целиком); **`/locations/`** — точки из `locations.ts` + зоны доставки + Google Maps; **`/contacts/`** — контакты + соцсети + форма.
-- **Оставшиеся заглушки** (`ComingSoon`): **`/about/`**, **`/wholesale/`**, **`/privacy/`**.
-- **Дальше**: контент `/about` и `/wholesale` (неделя 9), текст `/privacy`.
+- **Полностью рабочие страницы** (уже НЕ заглушки): **`/cart/`** — корзина + чекаут-диалог (`cart.js` реализован целиком); **`/locations/`** — точки из `locations.ts` + зоны доставки + Google Maps; **`/contacts/`** — контакты + соцсети + форма; **`/about/`** — PageHeader + 3 секции (принципы-checklist / контраст-card / локальность+CTA→`/locations`), иконки Lucide через `astro-icon`.
+- **Оставшиеся заглушки** (`ComingSoon`): **`/wholesale/`**, **`/privacy/`**.
+- **Дальше**: контент `/wholesale` (неделя 9), текст `/privacy`.
 
 ## Заметки по работе здесь
 

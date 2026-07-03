@@ -1,4 +1,92 @@
 ---
-import ComingSoon from "../layouts/ComingSoon.astro";
+import Layout from "../layouts/Layout.astro";
+import PageHeader from "../components/PageHeader.astro";
+import { Icon } from "astro-icon/components";
+
+const base = import.meta.env.BASE_URL;
+
+// Шість принципів бренду. Іконки — Lucide через astro-icon (набір @iconify-json/lucide),
+// декоративні (aria-hidden), колір успадковують від text-accent-red контейнера.
+const principles = [
+  { icon: "lucide:hand", text: "Ліпимо руками, не штампуємо на конвеєрі" },
+  { icon: "lucide:snowflake", text: "М'ясо вдруге не заморожуємо" },
+  { icon: "lucide:calendar", text: "Начинку робимо щодня, залишки з учора не докладаємо" },
+  { icon: "lucide:refresh-cw", text: "Не тримаємо готову продукцію місяцями в морозильній камері: лише свіжі партії" },
+  { icon: "lucide:scale", text: "Скільки грамів на етикетці, стільки й у пакунку: без води та льоду" },
+  { icon: "lucide:file-text", text: "Склад можна прочитати за п'ять секунд: жодного рядка не доведеться гуглити" },
+];
 ---
-<ComingSoon title="Про нас" />
+
+<Layout
+  title="Про нас — Сама Ліпила"
+  description="Хто ми такі: ручна ліпка, свіжі партії та чесний склад. Шість принципів «Сама Ліпила» і чому ми працюємо тільки у Львові та Вінниці."
+>
+  <PageHeader
+    title="Що насправді означає «Сама Ліпила»"
+    description="Не просто назва. Ось шість речей, на яких ми не економимо."
+  />
+
+  <main class="container mx-auto max-w-5xl px-4 py-16 md:py-24">
+    <!-- Секція Б — основний блок: принципи (checklist) -->
+    <section aria-labelledby="principles-heading" class="mb-16 md:mb-24">
+      <h2
+        id="principles-heading"
+        class="mb-8 font-display text-3xl font-semibold text-warm md:mb-10 md:text-4xl"
+      >
+        Наші принципи
+      </h2>
+
+      <ul class="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6">
+        {principles.map((p) => (
+          <li class="flex items-start gap-4 rounded-2xl border border-warm/10 bg-white p-6">
+            <span
+              class="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-primary/10 text-accent-red"
+            >
+              <Icon name={p.icon} class="h-5 w-5" aria-hidden="true" />
+            </span>
+            <p class="text-warm/85 md:text-lg">{p.text}</p>
+          </li>
+        ))}
+      </ul>
+    </section>
+
+    <!-- Секція A — контраст із масовим виробництвом: суцільний абзац у card-блоці -->
+    <section aria-labelledby="contrast-heading" class="mb-16 md:mb-24">
+      <div class="rounded-2xl border border-primary/20 bg-primary/5 p-6 md:p-10">
+        <h2
+          id="contrast-heading"
+          class="mb-4 font-display text-2xl font-semibold text-warm md:text-3xl"
+        >
+          Чому не як у всіх
+        </h2>
+        <p class="max-w-2xl text-warm/85 md:text-lg">
+          Масове виробництво оптимізує ціну. Ми оптимізуємо смак. Тому не тримаємо
+          тонни на складі й не розтягуємо термін придатності консервантами.
+        </p>
+      </div>
+    </section>
+
+    <!-- Секція В — локальність + CTA на /locations -->
+    <section aria-labelledby="locality-heading">
+      <h2
+        id="locality-heading"
+        class="mb-4 font-display text-3xl font-semibold text-warm md:text-4xl"
+      >
+        Де нас знайти
+      </h2>
+      <p class="max-w-2xl text-warm/85 md:text-lg">
+        Ми працюємо тільки у Львові та Вінниці, а не по всій Україні. У кожному
+        місті є кілька точок самовивозу, звідки можна забрати вареники чи пельмені
+        додому.
+      </p>
+
+      <a
+        href={`${base}locations/`}
+        class="mt-8 inline-flex items-center gap-2 rounded-full bg-accent-red px-7 py-3.5 font-medium text-white shadow-lg shadow-black/10 transition hover:bg-accent-red-hover"
+      >
+        Дивись, де ми поруч
+        <span aria-hidden="true">→</span>
+      </a>
+    </section>
+  </main>
+</Layout>
