@@ -44,6 +44,23 @@
 			</div>
 
 			<div>
+				<label for="inquiry-type" class="mb-1 block text-sm font-medium text-warm">Тема звернення</label>
+				<select
+					id="inquiry-type"
+					name="inquiry_type"
+					required
+					class="w-full rounded-lg border border-warm/20 bg-white px-3 py-2.5 text-warm transition focus:border-accent-red focus:outline-none focus:ring-2 focus:ring-accent-red/30 aria-[invalid]:border-accent-red"
+				>
+					<option value="" disabled selected hidden>Оберіть тему</option>
+					<option value="general">Загальне питання</option>
+					<option value="feedback">Відгук або скарга</option>
+					<option value="product">Питання про товар (склад, алергени)</option>
+					<option value="other">Інше</option>
+				</select>
+				<p class="field-error mt-1 text-sm text-accent-red" data-error-for="inquiry_type" hidden></p>
+			</div>
+
+			<div>
 				<label for="message" class="mb-1 block text-sm font-medium text-warm">Твоє повідомлення</label>
 				<textarea
 					id="message"
@@ -82,6 +99,7 @@
 	if (form && status) {
 		const nameInput = form.elements.namedItem("name") as HTMLInputElement;
 		const telInput = form.elements.namedItem("tel") as HTMLInputElement;
+		const inquiryInput = form.elements.namedItem("inquiry_type") as HTMLSelectElement;
 		const messageInput = form.elements.namedItem("message") as HTMLTextAreaElement;
 
 		const show = (msg: string, ok: boolean) => {
@@ -90,7 +108,10 @@
 			status.dataset.state = ok ? "ok" : "error";
 		};
 
-		const setFieldError = (input: HTMLInputElement | HTMLTextAreaElement, msg: string) => {
+		const setFieldError = (
+			input: HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement,
+			msg: string,
+		) => {
 			const errorEl = form.querySelector<HTMLElement>(`[data-error-for="${input.name}"]`);
 			if (msg) {
 				if (errorEl) {
@@ -123,6 +144,11 @@
 			return "";
 		};
 
+		const validateInquiry = (): string => {
+			if (!inquiryInput.value) return "Будь ласка, оберіть тему звернення.";
+			return "";
+		};
+
 		const validateMessage = (): string => {
 			const value = messageInput.value.trim();
 			if (!value) return "Будь ласка, опиши своє запитання/повідомлення.";
@@ -152,6 +178,8 @@
 			if (telInput.getAttribute("aria-invalid")) setFieldError(telInput, validateTel());
 		});
 
+		inquiryInput.addEventListener("change", () => setFieldError(inquiryInput, validateInquiry()));
+
 		messageInput.addEventListener("blur", () => setFieldError(messageInput, validateMessage()));
 		messageInput.addEventListener("input", () => {
 			if (messageInput.getAttribute("aria-invalid")) setFieldError(messageInput, validateMessage());
@@ -163,13 +191,15 @@
 			const errors = {
 				name: validateName(),
 				tel: validateTel(),
+				inquiry: validateInquiry(),
 				message: validateMessage(),
 			};
 			setFieldError(nameInput, errors.name);
 			setFieldError(telInput, errors.tel);
+			setFieldError(inquiryInput, errors.inquiry);
 			setFieldError(messageInput, errors.message);
 
-			const firstInvalid = [nameInput, telInput, messageInput].find(
+			const firstInvalid = [nameInput, telInput, inquiryInput, messageInput].find(
 				(input) => input.getAttribute("aria-invalid"),
 			);
 			if (firstInvalid) {
