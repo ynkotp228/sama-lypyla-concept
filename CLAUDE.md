@@ -61,7 +61,8 @@ src/
     locations.astro          # ✅ РЕАЛЬНАЯ: города из locations.ts, зоны доставки (mock) + точки → Google Maps
     contacts.astro           # ✅ РЕАЛЬНАЯ: PageHeader + ContactsBlock + SocialMedia + Form (2 колонки)
     about.astro              # ✅ РЕАЛЬНАЯ: PageHeader + 3 секции (принципы-checklist / контраст-card / локальность+CTA→/locations)
-    privacy|wholesale.astro  # 🚧 заглушки на ComingSoon (с title). ЕДИНСТВЕННЫЕ оставшиеся заглушки.
+    wholesale.astro          # ✅ РЕАЛЬНАЯ (B2B): PageHeader + мини-блок «чому з нами» + тариф-сітка (3 карты) + Formspree-форма (data-state form/sent, БЕЗ <dialog>)
+    privacy.astro            # 🚧 заглушка на ComingSoon (с title). ЕДИНСТВЕННАЯ оставшаяся заглушка.
     404.astro, robots.txt.ts
   components/
     PageHeader.astro   # mini-hero внутренних страниц (title + description + опц. secondary); на /catalog, /contacts, /cart, /locations
@@ -110,9 +111,9 @@ public/   фавиконки
 Актуально; подробная карта страниц/секций — в `concept-plan-info/site-arhitecrure.md` (v4).
 
 - **Готово**: модель данных; вся вёрстка по брифу (палитра + Lora/Inter). Главная (8 секций), лендинг `/catalog/`, 8 страниц категорий (client-фильтры + бейджи + `<details>`), `404`.
-- **Полностью рабочие страницы** (уже НЕ заглушки): **`/cart/`** — корзина + чекаут-диалог (`cart.js` реализован целиком); **`/locations/`** — точки из `locations.ts` + зоны доставки + Google Maps; **`/contacts/`** — контакты + соцсети + форма; **`/about/`** — PageHeader + 3 секции (принципы-checklist / контраст-card / локальность+CTA→`/locations`), иконки Lucide через `astro-icon`.
-- **Оставшиеся заглушки** (`ComingSoon`): **`/wholesale/`**, **`/privacy/`**.
-- **Дальше**: контент `/wholesale` (неделя 9), текст `/privacy`.
+- **Полностью рабочие страницы** (уже НЕ заглушки): **`/cart/`** — корзина + чекаут-диалог (`cart.js` реализован целиком); **`/locations/`** — точки из `locations.ts` + зоны доставки + Google Maps; **`/contacts/`** — контакты + соцсети + форма; **`/about/`** — PageHeader + 3 секции (принципы-checklist / контраст-card / локальность+CTA→`/locations`), иконки Lucide через `astro-icon`; **`/wholesale/`** — B2B: мини-блок «чому з нами» + тариф-сітка (3 карты, данные во frontmatter) + Formspree-форма (AJAX как на `/contacts`, состояния form/sent через `data-state`, БЕЗ `<dialog>`, honeypot `_gotcha`).
+- **Оставшаяся заглушка** (`ComingSoon`): **`/privacy/`**.
+- **Дальше**: текст `/privacy`.
 
 ## Заметки по работе здесь
 

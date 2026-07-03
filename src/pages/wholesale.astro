@@ -1,4 +1,322 @@
 ---
-import ComingSoon from "../layouts/ComingSoon.astro";
+// src/pages/wholesale.astro
+// Оптові поставки (B2B). Повноцінна сторінка замість заглушки ComingSoon.
+// Спека: week-9/wholesale.md. Тексти фінальні, офіційний діловий тон, без тире.
+// Кольори — тільки токени теплої палітри (primary/accent-red/warm/success), з різними
+// тональностями. Тарифні картки — прогресія насиченості «гірший → кращий»:
+// tier1 білий → tier2 помаранчевий тінт → tier3 тёмний warm (як футер, cream-текст).
+// Форма — насичений тінт-fieldset із не-білими (cream) полями. Підтвердження — success-soft.
+import Layout from '../layouts/Layout.astro';
+import PageHeader from '../components/PageHeader.astro';
+import { Icon } from 'astro-icon/components';
+
+// Телефонний патерн — ідентичний чекауту в cart.astro. Через expression-атрибут,
+// інакше Astro з'їдає бекслеші у звичайному pattern="...".
+const phonePattern = '^\\+380\\d{9}$';
+
+// Formspree endpoint під /wholesale (окремий від /contacts). Квота 50/міс спільна
+// на акаунт — сабміт не тестувати багаторазово.
+const formAction = 'https://formspree.io/f/xzdlyppn';
+
+// Переваги співпраці (міні-блок "чому з нами"): без іконок, без заголовка секції.
+const benefits = [
+  'Власне виробництво без посередників',
+  'Гнучкі умови під асортимент і графік вашого закладу',
+  'Прямий контакт із командою, без кол-центру',
+];
+
+// Тарифна сітка — локальні дані (не перевикористовуються, окремий файл у data/ не потрібен).
+// Без ціни в гривнях — лише відсоток знижки або її відсутність.
+// tone → кольорова схема картки (див. tones нижче). featured → тёмна акцентна картка.
+const tariffs = [
+  {
+    title: 'Спробувати',
+    icon: 'lucide:package',
+    tone: 'tier1' as const,
+    lines: [
+      'Разова або нерегулярна поставка, без мінімального обсягу.',
+      'Знижка від 5% від роздрібної ціни.',
+      'Оплата за фактом поставки.',
+    ],
+  },
+  {
+    title: 'Постійний партнер',
+    icon: 'lucide:handshake',
+    tone: 'tier2' as const,
+    lines: [
+      'Регулярні поставки за узгодженим графіком.',
+      'Знижка від 10% від роздрібної ціни.',
+      'Персональний менеджер для замовлень.',
+    ],
+  },
+  {
+    title: 'Індивідуальні умови',
+    icon: 'lucide:sliders-horizontal',
+    tone: 'tier3' as const,
+    lines: [
+      'Формат співпраці, обсяги та умови оплати обговорюються особисто під ваш бізнес.',
+    ],
+  },
+];
+
+// Кольорові схеми карток — одна тепла гама, наростання насиченості/контрасту
+// «гірший → кращий» (зліва направо / зверху вниз на мобільному).
+const tones = {
+  // tier1 — найлегша: білий фон, блідий помаранчевий чип.
+  tier1: {
+    card: 'border border-warm/10 bg-white transition hover:shadow-md',
+    chip: 'bg-primary/10 text-accent-red',
+    heading: 'text-warm',
+    line: 'text-warm/75',
+    dot: 'bg-primary/50',
+  },
+  // tier2 — середня: помаранчевий тінт-фон, насиченіший чип і бордер.
+  tier2: {
+    card: 'border border-primary/30 bg-primary/10 shadow-sm transition hover:shadow-md',
+    chip: 'bg-primary/25 text-accent-red',
+    heading: 'text-warm',
+    line: 'text-warm/80',
+    dot: 'bg-primary',
+  },
+  // tier3 — найконтрастніша «преміум»: тёмний warm-фон + cream-текст (як футер), суцільний помаранчевий чип.
+  tier3: {
+    card: 'border border-warm bg-warm shadow-lg transition hover:shadow-xl',
+    chip: 'bg-primary text-warm',
+    heading: 'text-cream',
+    line: 'text-cream/85',
+    dot: 'bg-primary',
+  },
+};
+
+// Опції селектів (необов'язкові поля). Назви рівнів співпраці співпадають із заголовками карток.
+const segments = ['Кафе', 'Ресторан', 'Готель', 'Інше'];
+const cooperationLevels = [
+  'Спробувати',
+  'Постійний партнер',
+  'Індивідуальні умови',
+  'Ще не визначив(-ся)',
+];
+
+const labelClass = 'mb-1 block text-sm font-medium text-warm';
+// Поля — не білі, а cream (тепліше, контрастує з насиченим тінт-fieldset'ом навколо).
+const fieldClass =
+  'w-full rounded-lg border border-warm/25 bg-cream px-3 py-2.5 text-warm placeholder:text-warm/40 transition focus:border-accent-red focus:outline-none focus:ring-2 focus:ring-accent-red/30';
 ---
-<ComingSoon title="Оптові поставки" />
+
+<Layout
+  title="Оптові поставки — Сама Ліпила"
+  description="Оптові поставки напівфабрикатів власного виробництва для кафе, ресторанів і готелів у Львові та Вінниці. Залиште заявку на співпрацю."
+>
+  <PageHeader
+    title="Оптові поставки напівфабрикатів для вашого закладу"
+    description="Постачаємо напівфабрикати власного виробництва для кафе, ресторанів і готелів у Львові та Вінниці. Обсяги та графік поставок узгоджуємо індивідуально під потреби вашого бізнесу."
+  />
+
+  <main class="container mx-auto max-w-5xl px-4 py-12 md:py-16">
+    <!-- ─── Міні-блок "чому з нами": теплий тінт-панель, без заголовка секції, без іконок ─── -->
+    <section
+      aria-label="Що ви отримуєте"
+      class="rounded-2xl border border-primary/20 bg-primary/5 p-6 md:p-8"
+    >
+      <p class="text-lg font-medium text-warm">
+        Незалежно від обраного рівня співпраці ви отримуєте:
+      </p>
+      <ul class="mt-4 space-y-2.5">
+        {benefits.map((item) => (
+          <li class="flex items-start gap-3 text-warm/85 md:text-lg">
+            <span class="mt-2 h-2 w-2 shrink-0 rounded-full bg-primary" aria-hidden="true"></span>
+            <span>{item}</span>
+          </li>
+        ))}
+      </ul>
+    </section>
+
+    <!-- ─── Тарифна сітка (3 картки) + дисклеймер ─── -->
+    <section aria-label="Умови співпраці" class="mt-12 md:mt-16">
+      <ul class="grid grid-cols-1 gap-4 md:grid-cols-3 md:gap-6">
+        {tariffs.map((tariff) => {
+          const tone = tones[tariff.tone];
+          return (
+            <li class={`flex h-full flex-col rounded-2xl p-6 ${tone.card}`}>
+              <span class={`inline-flex h-12 w-12 items-center justify-center rounded-xl ${tone.chip}`}>
+                <Icon name={tariff.icon} class="h-6 w-6" aria-hidden="true" />
+              </span>
+              <h2 class={`mt-4 font-display text-xl font-semibold ${tone.heading}`}>{tariff.title}</h2>
+              <ul class="mt-3 space-y-2">
+                {tariff.lines.map((line) => (
+                  <li class={`flex items-start gap-2.5 ${tone.line}`}>
+                    <span class={`mt-2 h-1.5 w-1.5 shrink-0 rounded-full ${tone.dot}`} aria-hidden="true"></span>
+                    <span>{line}</span>
+                  </li>
+                ))}
+              </ul>
+            </li>
+          );
+        })}
+      </ul>
+
+      <!-- Один дисклеймер під сіткою, не всередині кожної картки: обведений рамкою-нотаткою -->
+      <p class="mt-6 max-w-2xl rounded-xl border border-primary/30 bg-primary/5 px-5 py-4 text-sm text-warm/70">
+        Це концепт-проєкт: реальної комерційної пропозиції не існує. Наведені тарифи
+        демонструють підхід до співпраці та мають орієнтовний характер.
+      </p>
+    </section>
+
+    <!-- ─── Форма заявки: стани form / sent через data-state (без <dialog>) ─── -->
+    <section aria-label="Заявка на співпрацю" class="mt-12 md:mt-16">
+      <div id="wholesale-form-wrapper" data-state="form" aria-live="polite">
+        <!-- Стан "form": насичений теплий тінт-fieldset, cream-поля вводу контрастують на ньому -->
+        <div class="wholesale-form-state rounded-2xl border border-primary/30 bg-primary/10 p-6 md:p-8">
+          <!--
+            action + method="POST" → без JS браузер відправить напряму на Formspree
+            (стандартна сторінка-подяка). Без novalidate: невалідні поля блокує нативна
+            валідація, submit-подія стріляє лише коли форма валідна.
+          -->
+          <form id="wholesale-form" action={formAction} method="POST" class="space-y-4">
+            <div class="grid gap-4 sm:grid-cols-2">
+              <div>
+                <label for="company" class={labelClass}>Назва компанії / ФОП *</label>
+                <input type="text" id="company" name="company" required class={fieldClass} />
+              </div>
+
+              <div>
+                <label for="contact_name" class={labelClass}>Контактна особа *</label>
+                <input type="text" id="contact_name" name="contact_name" required class={fieldClass} />
+              </div>
+
+              <div>
+                <label for="phone" class={labelClass}>Телефон *</label>
+                <input
+                  type="tel"
+                  id="phone"
+                  name="phone"
+                  required
+                  pattern={phonePattern}
+                  placeholder="+380XXXXXXXXX"
+                  class={fieldClass}
+                />
+              </div>
+
+              <div>
+                <label for="email" class={labelClass}>Email *</label>
+                <input type="email" id="email" name="email" required class={fieldClass} />
+              </div>
+
+              <div>
+                <label for="segment" class={labelClass}>Сегмент</label>
+                <select id="segment" name="segment" class={fieldClass}>
+                  <option value="">Не вказано</option>
+                  {segments.map((option) => (
+                    <option value={option}>{option}</option>
+                  ))}
+                </select>
+              </div>
+
+              <div>
+                <label for="cooperation_level" class={labelClass}>Рівень співпраці</label>
+                <select id="cooperation_level" name="cooperation_level" class={fieldClass}>
+                  <option value="">Не вказано</option>
+                  {cooperationLevels.map((option) => (
+                    <option value={option}>{option}</option>
+                  ))}
+                </select>
+              </div>
+            </div>
+
+            <div>
+              <label for="comment" class={labelClass}>Коментар</label>
+              <textarea id="comment" name="comment" rows="4" class={fieldClass}></textarea>
+            </div>
+
+            <!-- Honeypot проти спаму (конвенція Formspree): приховане, поза tab-порядком -->
+            <input
+              type="text"
+              name="_gotcha"
+              style="display:none"
+              tabindex="-1"
+              autocomplete="off"
+              aria-hidden="true"
+            />
+
+            <div>
+              <button
+                type="submit"
+                id="wholesale-submit"
+                class="rounded-lg bg-accent-red px-6 py-3 font-semibold text-white transition-colors hover:bg-accent-red-hover disabled:cursor-not-allowed disabled:opacity-60"
+              >
+                Надіслати заявку
+              </button>
+
+              <!-- Inline-помилка: прихована за замовчуванням, показ лише при collapse/не-ok -->
+              <p id="wholesale-error" hidden class="mt-3 text-sm text-accent-red">
+                Не вдалося надіслати заявку. Спробуйте ще раз або зв'яжіться напряму.
+              </p>
+            </div>
+          </form>
+        </div>
+
+        <!-- Стан "sent": зелений success-soft фідбек (той самий токен, що ОК-повідомлення форм) -->
+        <div class="wholesale-sent-state flex flex-col items-center gap-4 rounded-2xl border border-success/25 bg-success-soft p-10 text-center">
+          <span class="inline-flex h-14 w-14 items-center justify-center rounded-full bg-success/15 text-success">
+            <Icon name="lucide:circle-check" class="h-8 w-8" aria-hidden="true" />
+          </span>
+          <h2
+            id="wholesale-sent-heading"
+            tabindex="-1"
+            class="font-display text-2xl font-semibold text-warm focus:outline-none"
+          >
+            Заявку надіслано.
+          </h2>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <style>
+    /* Перемикання станів форми через data-state на обгортці (як checkout у cart.astro, але без <dialog>) */
+    #wholesale-form-wrapper[data-state='form'] .wholesale-sent-state {
+      display: none;
+    }
+    #wholesale-form-wrapper[data-state='sent'] .wholesale-form-state {
+      display: none;
+    }
+  </style>
+
+  <script>
+    const wrapper = document.getElementById('wholesale-form-wrapper');
+    const form = document.getElementById('wholesale-form') as HTMLFormElement | null;
+    const submitBtn = document.getElementById('wholesale-submit') as HTMLButtonElement | null;
+    const errorEl = document.getElementById('wholesale-error');
+    const sentHeading = document.getElementById('wholesale-sent-heading');
+
+    if (wrapper && form && submitBtn && errorEl && sentHeading) {
+      form.addEventListener('submit', async (e) => {
+        // submit стріляє лише коли нативна валідація пройшла (форма без novalidate)
+        e.preventDefault();
+        errorEl.hidden = true;
+        submitBtn.disabled = true;
+
+        try {
+          const response = await fetch(form.action, {
+            method: 'POST',
+            body: new FormData(form),
+            headers: { Accept: 'application/json' },
+          });
+
+          if (response.ok) {
+            wrapper.dataset.state = 'sent';
+            form.reset();
+            // Фокус на головний результат дії — текст підтвердження (як у чекауті)
+            sentHeading.focus();
+          } else {
+            errorEl.hidden = false;
+          }
+        } catch {
+          errorEl.hidden = false;
+        } finally {
+          submitBtn.disabled = false;
+        }
+      });
+    }
+  </script>
+</Layout>
