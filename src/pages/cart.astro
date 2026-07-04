@@ -45,6 +45,7 @@ const cartProducts = await Promise.all(
       </svg>
       <p class="text-lg text-warm/70">Твій кошик поки порожній.</p>
       <a
+        id="browse-catalog-btn"
         href={`${base}catalog/`}
         class="rounded-lg bg-accent-red px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-accent-red-hover"
       >
@@ -277,18 +278,37 @@ const cartProducts = await Promise.all(
             <span>Це концепт-демо: реальне замовлення не буде надіслане.</span>
           </p>
         </div>
+
+        <!-- ─── СТАН "empty": кошик спорожнів в іншій вкладці між відкриттям діалогу й submit ─── -->
+        <div class="checkout-empty-state" aria-live="polite">
+          <p class="flex items-start gap-2.5 rounded-lg border border-primary/20 bg-primary/5 p-4 text-warm/80">
+            <span aria-hidden="true">ℹ</span>
+            <span id="checkout-empty-message"></span>
+          </p>
+        </div>
       </div>
     </dialog>
   </main>
 
   <style>
-    /* state=form: ховаємо preview */
-    #checkout-dialog[data-state="form"] .checkout-preview-state {
+    /* Три взаємовиключні стани діалогу через data-state на #checkout-dialog:
+       показуємо лише один блок, решту ховаємо. */
+
+    /* state=form: ховаємо preview + empty */
+    #checkout-dialog[data-state="form"] .checkout-preview-state,
+    #checkout-dialog[data-state="form"] .checkout-empty-state {
       display: none;
     }
 
-    /* state=preview: ховаємо форму */
-    #checkout-dialog[data-state="preview"] .checkout-form-state {
+    /* state=preview: ховаємо форму + empty */
+    #checkout-dialog[data-state="preview"] .checkout-form-state,
+    #checkout-dialog[data-state="preview"] .checkout-empty-state {
+      display: none;
+    }
+
+    /* state=empty: ховаємо форму + preview */
+    #checkout-dialog[data-state="empty"] .checkout-form-state,
+    #checkout-dialog[data-state="empty"] .checkout-preview-state {
       display: none;
     }
   </style>
@@ -387,6 +407,12 @@ const cartProducts = await Promise.all(
     // Initial render + підписка на оновлення
     renderCart();
     window.addEventListener('cart-updated', renderCart);
+    // Крос-таб синк: коли кошик змінюють в іншій вкладці, нативний storage-івент НЕ
+    // тригерить cart-updated (той лише в межах вкладки) — тож слухаємо storage окремо,
+    // щоб список тут теж оновлювався (той самий патерн, що лічильник у Header).
+    window.addEventListener('storage', (e) => {
+      if (e.key === 'sama-lipyla-cart') renderCart();
+    });
 
     // ─────────────────────────────────────────────
     // Діалог оформлення замовлення
@@ -407,16 +433,50 @@ const cartProducts = await Promise.all(
       const copyBtn = document.getElementById('copy-btn') as HTMLButtonElement;
       const backBtn = document.getElementById('back-to-form-btn') as HTMLButtonElement;
       const submitBtn = form.querySelector('button[type="submit"]') as HTMLButtonElement;
+      const emptyMessageEl = document.getElementById('checkout-empty-message') as HTMLElement;
+      // CTA порожнього стану кошика (поза діалогом, але в тому ж документі).
+      const browseCatalogBtn = document.getElementById('browse-catalog-btn') as HTMLAnchorElement | null;
+
+      // Таймер автозакриття повідомлення про порожній кошик (edge case: спорожнів у сусідній вкладці).
+      let emptyMsgTimer: number | null = null;
+
+      function showEmptyCartMessage() {
+        // Підміняємо вміст відкритого діалогу на inline-повідомлення (замість блокуючого alert).
+        dialog.dataset.state = 'empty';
+        // Інжектимо текст у aria-live контейнер, щоб зчитувач екрана його озвучив.
+        emptyMessageEl.textContent = 'Кошик порожній. Додайте товари, щоб оформити замовлення.';
+
+        // При повторному виклику спершу гасимо попередній таймер, щоб не накопичувати їх.
+        if (emptyMsgTimer !== null) clearTimeout(emptyMsgTimer);
+        emptyMsgTimer = window.setTimeout(() => {
+          emptyMsgTimer = null;
+          dialog.close();
+        }, 3500);
+      }
 
       // ─── Відкриття діалогу ───
       openBtn.addEventListener('click', () => {
         dialog.showModal();
       });
 
-      // ─── Закриття діалогу: повернути state на 'form' ───
+      // ─── Закриття діалогу: скинути state + керувати фокусом ───
       dialog.addEventListener('close', () => {
+        // Ручне закриття (Escape / ×) могло випередити автозакриття порожнього стану —
+        // гасимо таймер, щоб setTimeout не викликав close() вдруге.
+        if (emptyMsgTimer !== null) {
+          clearTimeout(emptyMsgTimer);
+          emptyMsgTimer = null;
+        }
+
         dialog.dataset.state = 'form';
         dialogTitle.textContent = 'Оформлення замовлення';
+
+        // Коли кошик порожній, елемента-ініціатора («Оформити замовлення») уже немає в DOM,
+        // тож дефолтне повернення фокуса <dialog> веде в нікуди. Переводимо фокус на CTA
+        // порожнього стану. У непорожньому кошику лишаємо дефолтну поведінку діалогу.
+        if (emptyEl.hidden === false) {
+          browseCatalogBtn?.focus();
+        }
       });
 
       // ─── Закриття по Escape (страховка, щоб подія не пішла далі в menu.js) ───
@@ -460,19 +520,21 @@ const cartProducts = await Promise.all(
       form.addEventListener('submit', (e) => {
         e.preventDefault();
 
+        // Першим кроком, до валідації решти полів: кошик міг спорожніти в сусідній
+        // вкладці між відкриттям діалогу й submit. Показуємо inline-повідомлення в
+        // діалозі (замість блокуючого alert) і закриваємо його — під ним уже актуальний
+        // порожній стан (renderCart реагує на cart-updated / storage).
+        if (getCart().length === 0) {
+          showEmptyCartMessage();
+          return;
+        }
+
         if (!form.checkValidity()) {
           form.reportValidity();
           return;
         }
 
         const cart = getCart();
-        if (cart.length === 0) {
-          // edge case: кошик спорожнів між відкриттям діалогу та submit
-          alert('Кошик порожній. Поверніться на сторінку та додайте товари.');
-          dialog.close();
-          return;
-        }
-
         const fd = new FormData(form);
         const method = String(fd.get('method')) as 'pickup' | 'delivery';
         const pointId = String(fd.get('pointId') ?? '');
