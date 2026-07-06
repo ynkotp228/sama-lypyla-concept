@@ -1,11 +1,12 @@
 ---
+const phonePattern = '^\\+380\\d{9}$';
 ---
 
 <section class="w-full max-w-lg text-left">
 	<div class="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-warm/10 md:p-8">
 		<h2 class="font-display text-2xl font-semibold text-warm">Питання, відгуки, пропозиції</h2>
 		<p class="mt-2 text-warm/70">
-			Залиш свої контакти і ми зв'яжемося з тобою найближчим часом.
+			Залиште своє повідомлення нижче.
 		</p>
 
 		<form
@@ -35,7 +36,7 @@
 					type="tel"
 					id="tel"
 					name="tel"
-					pattern="\+380\d{9}"
+					pattern={phonePattern}
 					required
 					placeholder="+380XXXXXXXXX"
 					class="w-full rounded-lg border border-warm/20 bg-white px-3 py-2.5 text-warm placeholder:text-warm/40 transition focus:border-accent-red focus:outline-none focus:ring-2 focus:ring-accent-red/30 aria-[invalid]:border-accent-red"
@@ -73,7 +74,15 @@
 				></textarea>
 				<p class="field-error mt-1 text-sm text-accent-red" data-error-for="message" hidden></p>
 			</div>
-
+			<!-- Honeypot проти спаму (конвенція Formspree): приховане, поза tab-порядком -->
+            <input
+              type="text"
+              name="_gotcha"
+              style="display:none"
+              tabindex="-1"
+              autocomplete="off"
+              aria-hidden="true"
+            />
 			<button
 				type="submit"
 				class="w-full rounded-lg bg-accent-red px-4 py-3 font-medium text-white transition hover:bg-accent-red-hover"
@@ -216,7 +225,7 @@
 					headers: { Accept: "application/json" },
 				});
 				if (res.ok) {
-					show("Дякуємо! Ваше повідомлення надіслано. Ми обов'язково дамо вам зворотний зв'язок.", true);
+					show("Звернення отримано. Дякуємо!", true);
 					form.reset();
 				} else {
 					show("Не вдалося надіслати. Спробуйте пізніше.", false);
