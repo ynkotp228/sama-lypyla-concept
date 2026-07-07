@@ -70,10 +70,39 @@ export function getCartTotal(products) {
   }, 0);
 }
 // ──────────────────────────────────────
+// Order number generation
+// ──────────────────────────────────────
+// Генерує номер замовлення у форматі XY-YYMMDD-HHMM-SS, де:
+//   XY — префікс зі способу отримання + міста: S (самовивіз) / D (доставка)
+//        та L (Львів) / V (Вінниця). Напр. самовивіз Вінниця → SV, доставка Львів → DL.
+//   YYMMDD-HHMM-SS — дата й час формування замовлення. Без сервера й спільної БД
+//        це найпростіший спосіб дати кожному замовленню несхожий номер: у різних
+//        юзерів (і в одного юзера в різні моменти) час майже завжди відрізняється.
+/**
+ * @param {{ method?: 'pickup' | 'delivery', city?: 'lviv' | 'vinnytsia', date?: Date }} [opts]
+ * @returns {string}
+ */
+export function generateOrderNumber({ method, city, date = new Date() } = {}) {
+  const prefix =
+    (method === 'delivery' ? 'D' : 'S') + (city === 'vinnytsia' ? 'V' : 'L');
+
+  const p2 = (n) => String(n).padStart(2, '0');
+  const yy = String(date.getFullYear()).slice(-2);
+  const datePart = `${yy}${p2(date.getMonth() + 1)}${p2(date.getDate())}`;
+  const timePart = `${p2(date.getHours())}${p2(date.getMinutes())}`;
+
+  return `${prefix}-${datePart}-${timePart}-${p2(date.getSeconds())}`;
+}
+
+// ──────────────────────────────────────
 // Order message generation (week 8)
 // ──────────────────────────────────────
 export function generateOrderMessage(cart, products, formData) {
-  const lines = ['Замовлення з сайту Сама Ліпила:', ''];
+  const lines = ['Замовлення з сайту Сама Ліпила:'];
+  // Номер замовлення (якщо переданий) — одразу під заголовком, щоб він потрапив
+  // і в прев'ю, і в текст, що копіюється / йде у Viber-Telegram.
+  if (formData.orderNumber) lines.push(`Номер замовлення: ${formData.orderNumber}`);
+  lines.push('');
   let total = 0;
 
   for (const item of cart) {

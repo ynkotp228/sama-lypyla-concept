@@ -323,6 +323,7 @@ const cartProducts = await Promise.all(
       removeFromCart,
       updateQuantity,
       generateOrderMessage,
+      generateOrderNumber,
       buildViberLink,
       buildTelegramLink,
     } from '../scripts/cart.js';
@@ -537,19 +538,25 @@ const cartProducts = await Promise.all(
         const cart = getCart();
         const fd = new FormData(form);
         const method = String(fd.get('method')) as 'pickup' | 'delivery';
+        const city = String(fd.get('city') ?? '') as 'lviv' | 'vinnytsia';
         const pointId = String(fd.get('pointId') ?? '');
+
+        // Кожне сформоване замовлення отримує власний номер (дата+час формування);
+        // префікс кодує спосіб + місто (напр. SV — самовивіз Вінниця, DL — доставка Львів).
+        const orderNumber = generateOrderNumber({ method, city });
 
         // Формат formData очікує generateOrderMessage (cart.js)
         const data = {
           name: String(fd.get('name') ?? '').trim(),
           phone: String(fd.get('phone') ?? '').trim(),
-          city: String(fd.get('city') ?? '') as 'lviv' | 'vinnytsia',
+          city,
           method,
           pointAddress:
             method === 'pickup' ? getPointById(pointId)?.address ?? '' : '',
           deliveryAddress:
             method === 'delivery' ? String(fd.get('deliveryAddress') ?? '').trim() : '',
           comment: String(fd.get('comment') ?? '').trim(),
+          orderNumber,
         };
 
         const message = generateOrderMessage(cart, products, data);
