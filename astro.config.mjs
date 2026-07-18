@@ -9,7 +9,7 @@ export default defineConfig({
   vite: {
     plugins: [tailwindcss()],
   },
-  site: "https://ynkotp228.github.io",
+  site: "https://ynkotp-webdev.github.io",
   base: "/sama-lypyla-concept/",
   integrations: [sitemap(), icon()],
 });

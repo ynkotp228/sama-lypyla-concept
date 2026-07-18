@@ -105,6 +105,7 @@ const phonePattern = '^\\+380\\d{9}$';
 	const form = document.getElementById("ask-form") as HTMLFormElement | null;
 	const status = document.getElementById("form-status");
 
+
 	if (form && status) {
 		const nameInput = form.elements.namedItem("name") as HTMLInputElement;
 		const telInput = form.elements.namedItem("tel") as HTMLInputElement;
@@ -147,7 +148,7 @@ const phonePattern = '^\\+380\\d{9}$';
 		const validateTel = (): string => {
 			const value = telInput.value.trim();
 			if (!value) return "Будь ласка, введи номер телефону.";
-			if (!/^\+380\d{9}$/.test(value)) {
+			if (!new RegExp(telInput.pattern).test(value)) {
 				return "Неправильний формат. Введи номер телефону у вигляді +380XXXXXXXXX (12 цифр).";
 			}
 			return "";
